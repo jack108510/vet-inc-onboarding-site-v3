@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url><loc>https://vetinc.ca/</loc><priority>1.0</priority><changefreq>weekly</changefreq></url>
+  <url><loc>https://vetinc.ca/price-analyzer.html</loc><priority>0.9</priority><changefreq>monthly</changefreq></url>
+  <url><loc>https://vetinc.ca/high-volume-low-price.html</loc><priority>0.8</priority><changefreq>monthly</changefreq></url>
+  <url><loc>https://vetinc.ca/low-margin.html</loc><priority>0.8</priority><changefreq>monthly</changefreq></url>
+  <url><loc>https://vetinc.ca/revenue-concentration.html</loc><priority>0.8</priority><changefreq>monthly</changefreq></url>
+  <url><loc>https://vetinc.ca/pms.html</loc><priority>0.7</priority><changefreq>monthly</changefreq></url>
+  <url><loc>https://vetinc.ca/reports.html</loc><priority>0.7</priority><changefreq>monthly</changefreq></url>
+  <url><loc>https://vetinc.ca/my-reports.html</loc><priority>0.6</priority><changefreq>monthly</changefreq></url>
+</urlset>

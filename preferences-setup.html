@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Vet INC — Pricing Preferences Setup</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#09090B;--surface:#18181B;--border:#27272A;--border-hover:#3f3f46;
+  --text:#FAFAFA;--text2:#A1A1AA;--text3:#71717A;
+  --blue:#2563eb;--blue-mid:#3b82f6;--blue-light:#60a5fa;--cyan:#93c5fd;
+  --grad:linear-gradient(135deg,#2563eb,#3b82f6,#60a5fa);
+  --green:#22c55e;--amber:#f59e0b;--red:#ef4444;
+}
+html{scroll-behavior:smooth}
+body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);line-height:1.6;min-height:100vh}
+
+/* NAV */
+nav{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(9,9,11,.9);backdrop-filter:blur(16px);border-bottom:1px solid var(--border);height:56px;display:flex;align-items:center;padding:0 32px;justify-content:space-between}
+.logo-text{font-size:1.1rem;font-weight:800;letter-spacing:-.02em}.logo-text span{color:var(--cyan)}
+.nav-label{font-size:.8rem;color:var(--text3);font-weight:500;letter-spacing:.04em;text-transform:uppercase}
+
+/* LAYOUT */
+.page{max-width:680px;margin:0 auto;padding:96px 24px 80px}
+
+/* HERO */
+.page-header{margin-bottom:48px}
+.page-badge{display:inline-flex;align-items:center;gap:6px;background:rgba(37,99,235,.12);border:1px solid rgba(96,165,250,.2);border-radius:100px;padding:4px 14px;font-size:.75rem;font-weight:600;color:var(--blue-light);letter-spacing:.04em;text-transform:uppercase;margin-bottom:16px}
+.page-badge::before{content:'';width:6px;height:6px;border-radius:50%;background:var(--blue-light);display:inline-block}
+.page-header h1{font-size:1.9rem;font-weight:800;letter-spacing:-.03em;line-height:1.2;margin-bottom:10px}
+.page-header p{font-size:.95rem;color:var(--text2);line-height:1.65;max-width:540px}
+
+/* SECTION */
+.section{margin-bottom:36px}
+.section-header{display:flex;align-items:center;gap:12px;margin-bottom:6px}
+.section-num{width:28px;height:28px;border-radius:50%;background:var(--grad);display:flex;align-items:center;justify-content:center;font-size:.75rem;font-weight:800;color:#fff;flex-shrink:0}
+.section-title{font-size:1rem;font-weight:700;color:var(--text)}
+.section-sub{font-size:.85rem;color:var(--text3);margin-bottom:20px;padding-left:40px}
+.section-body{padding-left:40px}
+
+/* CARDS (radio) */
+.card-grid{display:grid;gap:10px}
+.radio-card{background:var(--surface);border:1.5px solid var(--border);border-radius:12px;padding:16px 20px;cursor:pointer;transition:all .18s;display:flex;align-items:flex-start;gap:14px;user-select:none}
+.radio-card:hover{border-color:var(--border-hover)}
+.radio-card.selected{border-color:var(--blue);background:rgba(37,99,235,.08)}
+.radio-dot{width:18px;height:18px;border-radius:50%;border:2px solid var(--border-hover);display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:2px;transition:all .18s}
+.radio-card.selected .radio-dot{border-color:var(--blue);background:var(--blue)}
+.radio-card.selected .radio-dot::after{content:'';width:6px;height:6px;border-radius:50%;background:#fff;display:block}
+.card-body{}
+.card-label{font-size:.92rem;font-weight:700;color:var(--text);margin-bottom:2px}
+.card-desc{font-size:.8rem;color:var(--text3);line-height:1.45}
+.card-tag{display:inline-block;margin-top:6px;font-size:.7rem;font-weight:600;padding:2px 8px;border-radius:6px}
+.tag-green{background:rgba(34,197,94,.1);color:var(--green)}
+.tag-amber{background:rgba(245,158,11,.1);color:var(--amber)}
+.tag-red{background:rgba(239,68,68,.1);color:var(--red)}
+
+/* THRESHOLD INPUT */
+.threshold-wrap{display:none;margin-top:12px;background:rgba(37,99,235,.06);border:1px solid rgba(96,165,250,.15);border-radius:10px;padding:14px 16px}
+.threshold-wrap.visible{display:flex;align-items:center;gap:10px}
+.threshold-wrap label{font-size:.82rem;color:var(--text2);white-space:nowrap}
+.threshold-wrap input{width:64px;background:var(--bg);border:1.5px solid var(--border);border-radius:8px;padding:6px 10px;font-size:.9rem;font-weight:700;color:var(--text);font-family:inherit;text-align:center;outline:none}
+.threshold-wrap input:focus{border-color:var(--blue)}
+.threshold-wrap span{font-size:.82rem;color:var(--text3)}
+
+/* CHECKBOXES */
+.check-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.check-card{background:var(--surface);border:1.5px solid var(--border);border-radius:12px;padding:14px 16px;cursor:pointer;display:flex;align-items:center;gap:12px;transition:all .18s;user-select:none}
+.check-card:hover{border-color:var(--border-hover)}
+.check-card.checked{border-color:var(--blue);background:rgba(37,99,235,.07)}
+.check-box{width:18px;height:18px;border-radius:4px;border:2px solid var(--border-hover);display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all .18s}
+.check-card.checked .check-box{background:var(--blue);border-color:var(--blue)}
+.check-card.checked .check-box::after{content:'✓';font-size:.7rem;color:#fff;font-weight:800;line-height:1}
+.check-label{font-size:.85rem;font-weight:600;color:var(--text);line-height:1.3}
+.check-hint{font-size:.72rem;color:var(--text3);margin-top:2px}
+
+/* DIVIDER */
+.divider{height:1px;background:var(--border);margin:36px 0}
+
+/* CONTACT */
+.field-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px}
+.field{display:flex;flex-direction:column;gap:6px}
+.field.full{grid-column:1/-1}
+.field label{font-size:.75rem;font-weight:600;color:var(--text3);text-transform:uppercase;letter-spacing:.04em}
+.field input{background:var(--surface);border:1.5px solid var(--border);border-radius:10px;padding:11px 14px;font-size:.9rem;color:var(--text);font-family:inherit;outline:none;transition:border-color .18s}
+.field input::placeholder{color:var(--text3)}
+.field input:focus{border-color:var(--blue)}
+
+/* SUBMIT */
+.submit-area{margin-top:40px}
+.btn-submit{width:100%;padding:15px;background:var(--grad);color:#fff;border:none;border-radius:12px;font-size:1rem;font-weight:700;font-family:inherit;cursor:pointer;transition:opacity .2s,transform .2s;letter-spacing:-.01em}
+.btn-submit:hover:not(:disabled){opacity:.9;transform:translateY(-1px)}
+.btn-submit:disabled{opacity:.35;cursor:not-allowed;transform:none}
+.submit-note{text-align:center;font-size:.78rem;color:var(--text3);margin-top:10px}
+
+/* SUCCESS */
+.success-screen{display:none;text-align:center;padding:60px 0}
+.success-screen.visible{display:block}
+.success-icon{width:64px;height:64px;border-radius:50%;background:rgba(34,197,94,.1);border:2px solid var(--green);display:flex;align-items:center;justify-content:center;font-size:1.8rem;margin:0 auto 20px}
+.success-screen h2{font-size:1.6rem;font-weight:800;margin-bottom:10px}
+.success-screen p{color:var(--text2);font-size:.92rem;max-width:400px;margin:0 auto 28px}
+.btn-dash{display:inline-block;padding:12px 28px;background:var(--grad);color:#fff;border-radius:10px;font-weight:700;font-size:.9rem;text-decoration:none;transition:opacity .2s}
+.btn-dash:hover{opacity:.9}
+
+/* TOAST */
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(20px);background:#27272a;color:var(--text);border:1px solid var(--border);border-radius:10px;padding:12px 20px;font-size:.85rem;font-weight:500;opacity:0;transition:all .3s;pointer-events:none;z-index:999;white-space:nowrap}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+.toast.err{background:#2a0a0a;border-color:#7f1d1d;color:#f87171}
+
+@media(max-width:560px){
+  .field-grid{grid-template-columns:1fr}
+  .check-grid{grid-template-columns:1fr}
+  .field.full{grid-column:1}
+  .page{padding:80px 16px 60px}
+  .section-body{padding-left:0}
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <span class="logo-text">Vet<span>INC</span></span>
+  <span class="nav-label">Pricing Setup</span>
+</nav>
+
+<div class="page">
+
+  <!-- HEADER -->
+  <div class="page-header">
+    <div class="page-badge">Onboarding</div>
+    <h1>Set up your pricing preferences</h1>
+    <p>Takes 2 minutes. These settings control how the system behaves for your clinic — you can change them anytime from your dashboard.</p>
+  </div>
+
+  <div id="formArea">
+
+    <!-- SECTION 1: PRICING STRATEGY -->
+    <div class="section">
+      <div class="section-header">
+        <div class="section-num">1</div>
+        <div class="section-title">Pricing strategy</div>
+      </div>
+      <div class="section-sub">How aggressively should we close your pricing gap?</div>
+      <div class="section-body">
+        <div class="card-grid">
+          <div class="radio-card" data-group="strategy" data-value="conservative" onclick="selectCard(this)">
+            <div class="radio-dot"></div>
+            <div class="card-body">
+              <div class="card-label">Conservative</div>
+              <div class="card-desc">Small, safe adjustments. Prioritize minimal disruption over maximum recovery.</div>
+              <span class="card-tag tag-green">Low risk</span>
+            </div>
+          </div>
+          <div class="radio-card" data-group="strategy" data-value="ambitious" onclick="selectCard(this)">
+            <div class="radio-dot"></div>
+            <div class="card-body">
+              <div class="card-label">Ambitious</div>
+              <div class="card-desc">Meaningful adjustments. Close the gap steadily without shocking clients.</div>
+              <span class="card-tag tag-amber">Balanced</span>
+            </div>
+          </div>
+          <div class="radio-card" data-group="strategy" data-value="aggressive" onclick="selectCard(this)">
+            <div class="radio-dot"></div>
+            <div class="card-body">
+              <div class="card-label">Aggressive</div>
+              <div class="card-desc">Move fast and recover as much as possible. Best for clinics with significant pricing drift.</div>
+              <span class="card-tag tag-red">Maximum recovery</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <!-- SECTION 2: PROTECTED PRICES -->
+    <div class="section">
+      <div class="section-header">
+        <div class="section-num">2</div>
+        <div class="section-title">Protected prices</div>
+      </div>
+      <div class="section-sub">Which categories should we never touch, no matter what?</div>
+      <div class="section-body">
+        <div class="check-grid">
+          <div class="check-card" data-key="protected_euthanasia" onclick="toggleCheck(this)">
+            <div class="check-box"></div>
+            <div>
+              <div class="check-label">Euthanasia</div>
+              <div class="check-hint">End-of-life services</div>
+            </div>
+          </div>
+          <div class="check-card" data-key="protected_vaccinations" onclick="toggleCheck(this)">
+            <div class="check-box"></div>
+            <div>
+              <div class="check-label">Core Vaccinations</div>
+              <div class="check-hint">Rabies, DHPP, FVRCP</div>
+            </div>
+          </div>
+          <div class="check-card" data-key="protected_emergency_fees" onclick="toggleCheck(this)">
+            <div class="check-box"></div>
+            <div>
+              <div class="check-label">Emergency Fees</div>
+              <div class="check-hint">After-hours &amp; urgent care</div>
+            </div>
+          </div>
+          <div class="check-card" data-key="protected_wellness_exams" onclick="toggleCheck(this)">
+            <div class="check-box"></div>
+            <div>
+              <div class="check-label">Wellness Exams</div>
+              <div class="check-hint">Annual &amp; routine checkups</div>
+            </div>
+          </div>
+          <div class="check-card" data-key="protected_controlled_drugs" onclick="toggleCheck(this)">
+            <div class="check-box"></div>
+            <div>
+              <div class="check-label">Controlled Drugs</div>
+              <div class="check-hint">Schedule I–IV medications</div>
+            </div>
+          </div>
+          <div class="check-card" data-key="protected_spay_neuter" onclick="toggleCheck(this)">
+            <div class="check-box"></div>
+            <div>
+              <div class="check-label">Spay &amp; Neuter</div>
+              <div class="check-hint">Core surgical packages</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <!-- SECTION 3: APPROVAL FLOW -->
+    <div class="section">
+      <div class="section-header">
+        <div class="section-num">3</div>
+        <div class="section-title">How involved do you want to be?</div>
+      </div>
+      <div class="section-sub">Controls how pricing changes get applied — you can always override from your dashboard.</div>
+      <div class="section-body">
+        <div class="card-grid">
+          <div class="radio-card" data-group="approval" data-value="approve_all" onclick="selectCard(this)">
+            <div class="radio-dot"></div>
+            <div class="card-body">
+              <div class="card-label">Approve every change before it goes live</div>
+              <div class="card-desc">You review a queue. Nothing updates your PMS until you give the go-ahead.</div>
+            </div>
+          </div>
+          <div class="radio-card" data-group="approval" data-value="threshold" onclick="selectCard(this)">
+            <div class="radio-dot"></div>
+            <div class="card-body">
+              <div class="card-label">Only flag me for changes over X%</div>
+              <div class="card-desc">Small adjustments apply automatically. You're only pulled in when it's a big move.</div>
+              <div class="threshold-wrap" id="thresholdWrap">
+                <label>Flag changes over</label>
+                <input type="number" id="thresholdPct" min="1" max="50" value="10" onclick="event.stopPropagation()">
+                <span>%</span>
+              </div>
+            </div>
+          </div>
+          <div class="radio-card" data-group="approval" data-value="auto" onclick="selectCard(this)">
+            <div class="radio-dot"></div>
+            <div class="card-body">
+              <div class="card-label">Run automatically — show me results after</div>
+              <div class="card-desc">Full autopilot. The system optimizes and you get a summary report. Best for busy owners.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <!-- CONTACT -->
+    <div class="section">
+      <div class="section-header">
+        <div class="section-num" style="background:#27272a">✉</div>
+        <div class="section-title">Your details</div>
+      </div>
+      <div class="section-sub">So we can link this to your clinic and send your setup confirmation.</div>
+      <div class="section-body">
+        <div class="field-grid">
+          <div class="field"><label>Your Name</label><input type="text" id="contactName" placeholder="Dr. Jane Smith" oninput="checkReady()"></div>
+          <div class="field"><label>Work Email</label><input type="email" id="contactEmail" placeholder="jane@hillsidevet.com" oninput="checkReady()"></div>
+          <div class="field full"><label>Clinic Name</label><input type="text" id="clinicName" placeholder="Hillside Veterinary Clinic" oninput="checkReady()"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SUBMIT -->
+    <div class="submit-area">
+      <button class="btn-submit" id="submitBtn" onclick="submitForm()" disabled>Save My Preferences →</button>
+      <p class="submit-note">Your preferences are saved securely. You can update them anytime from your dashboard.</p>
+    </div>
+
+  </div><!-- /formArea -->
+
+  <!-- SUCCESS -->
+  <div class="success-screen" id="successScreen">
+    <div class="success-icon">✓</div>
+    <h2>You're all set.</h2>
+    <p>Your pricing preferences have been saved. The system is ready to go — head to your dashboard to see your first recommendations.</p>
+    <a href="/dashboard" class="btn-dash">Go to Dashboard →</a>
+  </div>
+
+</div><!-- /page -->
+
+<div class="toast" id="toast"></div>
+
+<script>
+const SB_URL = 'https://rnqhhzatlxmyvccdvqkr.supabase.co';
+const SB_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJucWhoemF0bHhteXZjY2R2cWtyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzUwMTQ5ODUsImV4cCI6MjA5MDU5MDk4NX0.zokle21pVEPG5bIOFiyZIWYkYIwhkolWNOhJ7Cbub30';
+
+const state = {
+  strategy: null,
+  approval: null,
+  protected_euthanasia: false,
+  protected_vaccinations: false,
+  protected_emergency_fees: false,
+  protected_wellness_exams: false,
+  protected_controlled_drugs: false,
+  protected_spay_neuter: false,
+};
+
+function selectCard(el) {
+  const group = el.dataset.group;
+  document.querySelectorAll(`.radio-card[data-group="${group}"]`).forEach(c => c.classList.remove('selected'));
+  el.classList.add('selected');
+  state[group] = el.dataset.value;
+
+  // Show/hide threshold input
+  if (group === 'approval') {
+    const wrap = document.getElementById('thresholdWrap');
+    wrap.classList.toggle('visible', el.dataset.value === 'threshold');
+  }
+
+  checkReady();
+}
+
+function toggleCheck(el) {
+  el.classList.toggle('checked');
+  state[el.dataset.key] = el.classList.contains('checked');
+}
+
+function checkReady() {
+  const name = document.getElementById('contactName').value.trim();
+  const email = document.getElementById('contactEmail').value.trim();
+  const clinic = document.getElementById('clinicName').value.trim();
+  const ready = state.strategy && state.approval && name && email.includes('@') && clinic;
+  document.getElementById('submitBtn').disabled = !ready;
+}
+
+function showToast(msg, err = false) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className = 'toast show' + (err ? ' err' : '');
+  setTimeout(() => t.className = 'toast', 3000);
+}
+
+async function submitForm() {
+  const btn = document.getElementById('submitBtn');
+  btn.disabled = true;
+  btn.textContent = 'Saving...';
+
+  const threshold = state.approval === 'threshold'
+    ? parseInt(document.getElementById('thresholdPct').value) || 10
+    : null;
+
+  const payload = {
+    clinic_name: document.getElementById('clinicName').value.trim(),
+    contact_name: document.getElementById('contactName').value.trim(),
+    contact_email: document.getElementById('contactEmail').value.trim(),
+    pricing_strategy: state.strategy,
+    protected_euthanasia: state.protected_euthanasia,
+    protected_vaccinations: state.protected_vaccinations,
+    protected_emergency_fees: state.protected_emergency_fees,
+    protected_wellness_exams: state.protected_wellness_exams,
+    protected_controlled_drugs: state.protected_controlled_drugs,
+    protected_spay_neuter: state.protected_spay_neuter,
+    approval_flow: state.approval,
+    approval_threshold_pct: threshold,
+  };
+
+  try {
+    const res = await fetch(SB_URL + '/rest/v1/clinic_preferences', {
+      method: 'POST',
+      headers: {
+        'apikey': SB_KEY,
+        'Content-Type': 'application/json',
+        'Prefer': 'return=minimal',
+      },
+      body: JSON.stringify(payload),
+    });
+
+    if (!res.ok) {
+      const err = await res.json().catch(() => ({}));
+      throw new Error(err.message || 'Failed to save');
+    }
+
+    document.getElementById('formArea').style.display = 'none';
+    document.getElementById('successScreen').classList.add('visible');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+
+  } catch (e) {
+    showToast('Error: ' + e.message, true);
+    btn.disabled = false;
+    btn.textContent = 'Save My Preferences →';
+  }
+}
+</script>
+</body>
+</html>

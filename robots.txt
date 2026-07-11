@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://vetinc.ca/sitemap.xml

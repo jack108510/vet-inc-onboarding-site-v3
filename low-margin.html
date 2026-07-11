@@ -1,0 +1,718 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Low Margin Report — Vet INC</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{--blue:#2563eb;--blue-light:#60a5fa;--blue-dim:#eff6ff;--blue-border:#dbeafe;--navy:#1e3a5f;--muted:#64748b;--bg:#f0f6ff;--white:#fff;--green:#16a34a;--red:#ef4444;--orange:#ea580c;--yellow:#ca8a04;}
+body{background:var(--bg);color:var(--navy);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-serif;min-height:100vh}
+
+/* NAV */
+nav{background:var(--white);border-bottom:1px solid var(--blue-border);padding:0 32px;height:56px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100}
+.nav-logo{display:flex;align-items:center;gap:8px;text-decoration:none}
+.nav-logo-icon{width:32px;height:32px;background:linear-gradient(135deg,var(--blue),var(--blue-light));border-radius:8px;display:flex;align-items:center;justify-content:center}
+.nav-logo-text{font-size:1rem;font-weight:800;color:var(--navy)}.nav-logo-text span{color:var(--blue)}
+.nav-back{text-decoration:none;color:var(--muted);font-size:.82rem;font-weight:500;padding:6px 12px;border-radius:7px;transition:all .15s;border:1px solid var(--blue-border)}
+.nav-back:hover{background:var(--blue-dim);color:var(--blue)}
+
+/* WIZARD */
+.wizard{max-width:680px;margin:0 auto;padding:40px 24px 80px}
+
+/* PROGRESS */
+.progress-bar{display:flex;align-items:center;gap:0;margin-bottom:40px}
+.step-dot{width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.75rem;font-weight:700;flex-shrink:0;transition:all .3s;border:2px solid var(--blue-border);background:var(--white);color:var(--muted)}
+.step-dot.active{background:var(--blue);border-color:var(--blue);color:#fff}
+.step-dot.done{background:var(--green);border-color:var(--green);color:#fff}
+.step-line{flex:1;height:2px;background:var(--blue-border);transition:background .3s}
+.step-line.done{background:var(--green)}
+
+/* SLIDE */
+.slide{display:none;animation:fadeIn .25s ease}
+.slide.active{display:block}
+@keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+.slide-label{font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--blue);margin-bottom:8px}
+.slide-title{font-size:1.6rem;font-weight:900;color:var(--navy);margin-bottom:8px;line-height:1.2}
+.slide-sub{font-size:.9rem;color:var(--muted);line-height:1.65;margin-bottom:28px}
+
+/* PMS CARDS */
+.pms-options{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:28px}
+.pms-option{background:var(--white);border:2px solid var(--blue-border);border-radius:14px;padding:20px;cursor:pointer;transition:all .2s;text-align:center}
+.pms-option:hover{border-color:var(--blue);background:var(--blue-dim)}
+.pms-option.selected{border-color:var(--blue);background:var(--blue-dim);box-shadow:0 0 0 3px rgba(37,99,235,.1)}
+.pms-option-name{font-size:1rem;font-weight:700;color:var(--navy);margin-bottom:4px}
+.pms-option-sub{font-size:.75rem;color:var(--muted)}
+.pms-option-check{width:22px;height:22px;border-radius:50%;background:var(--blue);color:#fff;display:none;align-items:center;justify-content:center;margin:10px auto 0;font-size:12px}
+.pms-option.selected .pms-option-check{display:flex}
+
+/* DROP ZONE */
+.drop-zone{border:2px dashed var(--blue-border);border-radius:14px;padding:28px 20px;text-align:center;cursor:pointer;transition:all .2s;background:var(--white);position:relative;margin-bottom:14px}
+.drop-zone:hover,.drop-zone.over{border-color:var(--blue);background:var(--blue-dim)}
+.drop-zone.loaded{border-color:var(--green);border-style:solid;background:rgba(22,163,74,.04)}
+.drop-title{font-size:.9rem;font-weight:700;color:var(--navy);margin-bottom:4px}
+.drop-hint{font-size:.75rem;color:var(--muted);line-height:1.5}
+.drop-badge{position:absolute;top:12px;right:12px;font-size:.6rem;font-weight:700;padding:2px 8px;border-radius:5px;text-transform:uppercase}
+.badge-req{background:var(--blue-dim);color:var(--blue)}
+.badge-ok{background:rgba(22,163,74,.12);color:var(--green)}
+.drop-filename{font-size:.72rem;color:var(--green);margin-top:6px;font-weight:600}
+input[type=file]{display:none}
+
+/* CLINIC INPUT */
+.clinic-input{width:100%;background:var(--white);border:2px solid var(--blue-border);color:var(--navy);padding:14px 16px;border-radius:12px;font-size:1rem;outline:none;transition:border-color .2s;font-family:inherit;margin-bottom:8px}
+.clinic-input:focus{border-color:var(--blue);box-shadow:0 0 0 3px rgba(37,99,235,.08)}
+
+/* BUTTONS */
+.btn-row{display:flex;gap:12px;align-items:center;margin-top:16px}
+.btn-next{background:linear-gradient(135deg,var(--blue),var(--blue-light));color:#fff;border:none;padding:13px 28px;border-radius:10px;font-size:.95rem;font-weight:700;cursor:pointer;transition:all .2s;font-family:inherit}
+.btn-next:hover{transform:translateY(-1px);box-shadow:0 4px 14px rgba(37,99,235,.3)}
+.btn-back{background:none;border:1px solid var(--blue-border);color:var(--muted);padding:13px 20px;border-radius:10px;font-size:.88rem;font-weight:600;cursor:pointer;transition:all .2s;font-family:inherit}
+.btn-back:hover{border-color:var(--blue);color:var(--blue)}
+
+/* ANALYZING */
+.analyzing-box{text-align:center;padding:40px 20px}
+.spinner-large{width:48px;height:48px;border:4px solid var(--blue-border);border-top-color:var(--blue);border-radius:50%;animation:spin .8s linear infinite;margin:0 auto 20px}
+@keyframes spin{to{transform:rotate(360deg)}}
+.analyzing-text{font-size:1rem;font-weight:600;color:var(--navy);margin-bottom:6px}
+.analyzing-sub{font-size:.82rem;color:var(--muted)}
+
+/* SUMMARY CARDS */
+.summary-cards{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-bottom:20px}
+@media(min-width:500px){.summary-cards{grid-template-columns:repeat(4,1fr)}}
+.summary-card{background:var(--white);border:1px solid var(--blue-border);border-radius:12px;padding:16px;text-align:center}
+.summary-val{font-size:1.6rem;font-weight:900;color:var(--blue);line-height:1}
+.summary-val.red{color:var(--red)}
+.summary-val.orange{color:var(--orange)}
+.summary-val.green{color:var(--green)}
+.summary-label{font-size:.65rem;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin-top:4px}
+
+/* HERO BOX — blue tint for items flagged */
+.hero-flagged{background:linear-gradient(135deg,rgba(37,99,235,.1),rgba(37,99,235,.04));border:1px solid rgba(37,99,235,.2);border-radius:14px;padding:24px;text-align:center;margin-bottom:20px}
+.hero-flagged-num{font-size:2.4rem;font-weight:900;color:var(--blue)}
+.hero-flagged-label{font-size:.82rem;color:var(--muted);margin-top:4px}
+
+/* THRESHOLD SLIDER */
+.threshold-wrap{display:flex;align-items:center;gap:10px;background:var(--white);border:1px solid var(--blue-border);border-radius:10px;padding:10px 16px;margin-bottom:20px;flex-wrap:wrap}
+.threshold-label{font-size:.82rem;font-weight:600;color:var(--navy);white-space:nowrap}
+input[type=range]{width:140px;accent-color:var(--blue)}
+.threshold-val{font-size:.95rem;font-weight:800;color:var(--blue);min-width:40px}
+
+/* HINTS */
+.results-hint{background:var(--blue-dim);border:1px solid var(--blue-border);border-radius:10px;padding:14px 16px;font-size:.8rem;color:var(--muted);line-height:1.6;margin-bottom:20px}
+.results-hint strong{color:var(--navy)}
+
+/* TOP 10 TABLE */
+.top-services{background:var(--white);border:1px solid var(--blue-border);border-radius:14px;overflow:hidden;margin-bottom:20px}
+.top-services-header{padding:14px 16px;border-bottom:1px solid var(--blue-border);font-size:.82rem;font-weight:700;color:var(--navy);display:flex;justify-content:space-between;align-items:center}
+.top-services-header span{font-size:.72rem;color:var(--muted);font-weight:400}
+.top-item-row{display:grid;grid-template-columns:1fr auto auto auto;gap:8px;padding:10px 16px;border-bottom:1px solid var(--blue-border);font-size:.8rem;align-items:center}
+.top-item-row:last-child{border-bottom:none}
+.top-item-name{font-weight:600;color:var(--navy);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+
+/* MARGIN PILLS */
+.margin-pill{display:inline-flex;align-items:center;font-size:.75rem;font-weight:700;padding:3px 9px;border-radius:20px}
+.margin-red{background:rgba(239,68,68,.1);color:var(--red)}
+.margin-orange{background:rgba(234,88,12,.1);color:var(--orange)}
+.margin-yellow{background:rgba(202,138,4,.1);color:var(--yellow)}
+.margin-green{background:rgba(22,163,74,.1);color:var(--green)}
+.flag-pill{display:inline-block;font-size:.65rem;font-weight:700;padding:2px 8px;border-radius:4px;background:rgba(239,68,68,.1);color:var(--red)}
+
+/* FULL REPORT CTA */
+.full-report-cta{background:linear-gradient(135deg,var(--blue),#1d4ed8);border-radius:14px;padding:28px;text-align:center;color:#fff;margin-bottom:20px}
+.full-report-cta h3{font-size:1.1rem;font-weight:800;margin-bottom:8px}
+.full-report-cta p{font-size:.82rem;opacity:.85;line-height:1.6;margin-bottom:18px}
+.btn-full-report{display:inline-flex;align-items:center;gap:6px;background:#fff;color:var(--blue);padding:12px 24px;border-radius:9px;font-size:.9rem;font-weight:700;cursor:pointer;border:none;font-family:inherit;transition:all .2s}
+.btn-full-report:hover{transform:translateY(-1px);box-shadow:0 4px 14px rgba(0,0,0,.15)}
+.btn-restart{background:none;border:1px solid rgba(255,255,255,.3);color:rgba(255,255,255,.8);padding:10px 18px;border-radius:9px;font-size:.82rem;font-weight:600;cursor:pointer;font-family:inherit;transition:all .2s;margin-top:10px}
+.btn-restart:hover{background:rgba(255,255,255,.1);color:#fff}
+
+/* FULL REPORT TABLE */
+.full-report-table-wrap{background:var(--white);border:1px solid var(--blue-border);border-radius:14px;overflow:hidden;margin-bottom:20px;display:none}
+.full-report-table-wrap.visible{display:block}
+.frt-header{padding:16px 20px;border-bottom:1px solid var(--blue-border);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px}
+.frt-title{font-size:.95rem;font-weight:700;color:var(--navy)}
+.frt-actions{display:flex;gap:8px}
+.btn-pdf{background:linear-gradient(135deg,var(--blue),var(--blue-light));color:#fff;border:none;padding:8px 16px;border-radius:8px;font-size:.8rem;font-weight:700;cursor:pointer;font-family:inherit;transition:all .2s}
+.btn-pdf:hover{transform:translateY(-1px);box-shadow:0 3px 10px rgba(37,99,235,.3)}
+.btn-csv{background:var(--white);color:var(--blue);border:1px solid var(--blue-border);padding:8px 16px;border-radius:8px;font-size:.8rem;font-weight:700;cursor:pointer;font-family:inherit;transition:all .2s}
+.btn-csv:hover{border-color:var(--blue);background:var(--blue-dim)}
+.frt-table{width:100%;border-collapse:collapse;font-size:12px}
+.frt-table th{background:#f0f6ff;padding:10px 12px;text-align:left;font-size:10px;text-transform:uppercase;letter-spacing:.04em;color:var(--muted);border-bottom:1px solid var(--blue-border);white-space:nowrap;cursor:pointer;user-select:none}
+.frt-table th:hover{background:#dbeafe}
+.frt-table th.sorted{color:var(--navy)}
+.frt-table td{padding:9px 12px;border-bottom:1px solid #f0f6ff;vertical-align:middle}
+.frt-table tr:last-child td{border-bottom:none}
+.frt-table tr:hover td{background:#f8faff}
+.td-name{font-weight:600;color:var(--navy)}
+.td-muted{color:var(--muted)}
+.frt-count{font-size:.75rem;color:var(--muted);padding:10px 14px;border-top:1px solid var(--blue-border);background:var(--blue-dim)}
+
+/* PRINT */
+.print-header{display:none;text-align:center;margin-bottom:24px;padding-bottom:16px;border-bottom:2px solid var(--blue)}
+.print-header h2{font-size:1.4rem;font-weight:900;color:var(--navy)}
+.print-header p{font-size:.82rem;color:var(--muted);margin-top:4px}
+@media print{
+  nav,.btn-row,.full-report-cta,.progress-bar,.results-hint,.btn-pdf,.btn-csv,.frt-actions,.threshold-wrap,.top-services,.hero-flagged{display:none!important}
+  body{background:#fff}
+  .full-report-table-wrap{display:block!important;border:none}
+  .frt-table th{background:#f5f5f5}
+  .summary-cards{page-break-inside:avoid}
+  .print-header{display:block!important}
+  .slide{display:block!important}
+  .slide:not(#slide-5){display:none!important}
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <a class="nav-logo" href="index.html">
+    <div class="nav-logo-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg></div>
+    <div class="nav-logo-text">Vet <span>INC</span></div>
+  </a>
+  <a class="nav-back" href="reports.html">← Back to Reports</a>
+</nav>
+
+<div class="wizard">
+
+  <!-- PROGRESS -->
+  <div class="progress-bar" id="progress">
+    <div class="step-dot active" id="dot-1">1</div>
+    <div class="step-line" id="line-1"></div>
+    <div class="step-dot" id="dot-2">2</div>
+    <div class="step-line" id="line-2"></div>
+    <div class="step-dot" id="dot-3">3</div>
+    <div class="step-line" id="line-3"></div>
+    <div class="step-dot" id="dot-4">4</div>
+    <div class="step-line" id="line-4"></div>
+    <div class="step-dot" id="dot-5">5</div>
+  </div>
+
+  <!-- STEP 1: PMS -->
+  <div class="slide active" id="slide-1">
+    <div class="slide-label">Step 1 of 5</div>
+    <div class="slide-title">What's your practice management system?</div>
+    <div class="slide-sub">We'll tailor the upload instructions to match your PMS export format.</div>
+    <div class="pms-options">
+      <div class="pms-option" onclick="selectPMS('cornerstone',this)">
+        <img src="data:image/png;base64,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" style="width:64px;height:64px;object-fit:contain;margin-bottom:8px;border-radius:8px"/>
+        <div class="pms-option-name">Cornerstone</div>
+        <div class="pms-option-sub">Invoice Item Setup export</div>
+        <div class="pms-option-check">✓</div>
+      </div>
+      <div class="pms-option" onclick="selectPMS('avimark',this)">
+        <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAIAAAACACAMAAAD04JH5AAAAclBMVEVHcEwnwcEnwsPzMTG6KT0nwsMnwsPzMDAEF2EgnavzMTHwMTDzMTEmw8T0MDDyMC8mwcLyMTEnwcLDKzsCF2EeoK2LI0cCF2IINm8YfZgBF2MRWoNYHlQvGVoCF2ICF2ICGGIBF2DtMDAnvb4nwcIAB1x2lkIrAAAAIXRSTlMAN57oEPXh/l4ZiSnNw65GWGR5+jn7+J37+YD6+fqx5tKHmhXgAAAEa0lEQVR4nMWZ22KiMBBAsaYStPVWWrpsFwXl/39xQ2gt5jqTSTBPfeocM4eZZJJltLU7MOJ/oIXf5vnL7mHhN+s877ou324eE/6wHMIPK18/AGH38hN+IFgeHhn+G2FGG0XyO23l27lsZKN7JoQ5VGC/7ukEy3XyPGjJVxBe0tooCo8r/IiQTgW2tu/+NA+JVICFT6fCwZ38ewKhQmSEzdby6dkRYqqw8btnYIimgkg+PnwnVYiB4Co8AASyCp7C40Ug2hiUfGUTCDZubF0HhxDcJgnJVxBCVKC4Z0LAqrBDFh4/AioPxhMPlQBemKwnHjICrDBhug4WwX9cYcTC4yPwFSZ64fEjOGwM7TrIZetR8BMPceXmwpQ2+SqDrgJ/62YEMJxWePv1lubzN4U3dEjetnMhmD/FAaBtP97SE1ha4wjQ/vtIrIK1I3wDCISUNjoa0g0goQrOOjwBSKSC51x0ByAQYufBe0lQAIQKUfPgP42oAIMK0XYBclHUAaKpADsUmwDiqAA8k5sB6IUJfBS1ABCrAmJKYAUg2IgamTkAAvOQd6jxgAsgxEb0dMIDgO1R+BuxDwBlY8iEyg8ARggb10IAQDZCb4BBAC3AxtDhHBTAnQfCeBIM4EAgPdsgAGxtkjYURAGYbKROZnEAWmGiv1hhAe5ViDCdxwPcVIjzPhECIKtCpJl4IED79RHruTIMoP98f90/DqD//HO5Xp+fFo8B6FsR/iKWQCjmB+jbv+8yvERYHckISACR/Mst/oBAVgEFIJJ/nYYfEWgqIABuyVcIaCqAAe6SryIQVAAC9L0Ib4kvbQxWAQTQyy/fGn5Yz6EqQAD84eUuhBUmP4Aj+WoeQlTwAcjwoPgSYY9GcAN43NMJ8IXJCQBL/v3C9igHQEh4uQsoBCuA3H18eLkJqyMZAJt8dRfghckMYOo6SARoHkwAlq6DA4D2KB0gRviRAYSgAhCTryAAqgJXfv1nvPAXWZh8KtwBBH75TgRfYeLTnx89vERYOVXgv+GDC48fwdEm+Y97ynE3MoJdBZ7CPQOBFYGncc+AYFGBD8lPH35EMKnAMSceOoJ+YuIp3TMgvGoEi9cZAcy1eT8XgrUeFMfVDAjOclQ8PSdG8PaExCpAGnNCFYC3hVQqIG7vxTG+Csj5xSKyjQHDvKgqhA0u9rFUuGJuSNMVRwXSKFUUJmp8NTwrCtTsgFiYtAMQr4ZVYhAIKmh9n1V1yTJWNhxDkAUWJr3rsLpmdSUgsgpHENSjDPfismLlqa6bcyH+QhGgEa7GeWHNs/JcZMWJZzgNhiUKExzB0nXE3osd4NW5HFjQC2yj9cghAZrzqcyCAIA2Ou6AvB5SwJpafA7oFMi1ePLmwTWTkRKWGT+VaAmnCO7kO8tuXRVcROa8CdsAuRxt0j8lrquyYAVHFiJl2U5MoCNHWTVNUxN+/zeCXhVivR8Cl6YC/dkMjTBVgfBUE76KW2EiPVaREEYVorzcBq7h8Ex8sCQjUJP/H7mnlMQ8TexkAAAAAElFTkSuQmCC" style="width:64px;height:64px;object-fit:contain;margin-bottom:8px;border-radius:8px"/>
+        <div class="pms-option-name">AVImark</div>
+        <div class="pms-option-sub">Item List export</div>
+        <div class="pms-option-check">✓</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- STEP 2: UPLOAD -->
+  <div class="slide" id="slide-2">
+    <div class="slide-label">Step 2 of 5</div>
+    <div class="slide-title">Upload your report</div>
+    <div class="slide-sub" id="upload-sub">Export from your PMS and drop it below. Your data stays in your browser — nothing is sent anywhere.</div>
+
+    <div class="drop-zone" id="dz1"
+      onclick="document.getElementById('f1').click()"
+      ondragover="dzOver(event,this)"
+      ondragleave="dzLeave(this)"
+      ondrop="dzDrop(event,this)">
+      <span class="drop-badge badge-req" id="b1">Required</span>
+      <div class="drop-title" id="drop-title-1">Invoice Item Setup Report</div>
+      <div class="drop-hint" id="hint1">In Cornerstone: Reports → Inventory → Invoice Item Setup → Export to CSV</div>
+      <div class="drop-filename" id="fn1"></div>
+      <input type="file" id="f1" accept=".csv,.txt" onchange="loadFile(this)"/>
+    </div>
+  </div>
+
+  <!-- STEP 3: CLINIC NAME -->
+  <div class="slide" id="slide-3">
+    <div class="slide-label">Step 3 of 5</div>
+    <div class="slide-title">What's your clinic name?</div>
+    <div class="slide-sub">This will appear on your report summary.</div>
+    <input class="clinic-input" id="clinic-name" type="text" placeholder="River Valley Veterinary…"
+      onkeydown="if(event.key==='Enter'&&this.value.trim().length>=2)analyze()"/>
+    <div style="font-size:.75rem;color:var(--muted);margin-top:6px">Press Enter to continue →</div>
+    <div class="btn-row">
+      <button class="btn-next" onclick="analyze()">Analyze →</button>
+      <button class="btn-back" onclick="goTo(2)">← Back</button>
+    </div>
+  </div>
+
+  <!-- STEP 4: ANALYZING -->
+  <div class="slide" id="slide-4">
+    <div class="analyzing-box">
+      <div class="spinner-large"></div>
+      <div class="analyzing-text">Analyzing your price list…</div>
+      <div class="analyzing-sub">Checking margins and flagging items below threshold</div>
+    </div>
+  </div>
+
+  <!-- STEP 5: RESULTS -->
+  <div class="slide" id="slide-5">
+    <div class="slide-label">Results</div>
+    <div class="slide-title" id="results-title">Here's what we found</div>
+
+    <div class="hero-flagged">
+      <div class="hero-flagged-num" id="hero-flagged-num">—</div>
+      <div class="hero-flagged-label" id="hero-flagged-label">Items flagged below threshold</div>
+    </div>
+
+    <div class="summary-cards" id="summary-cards"></div>
+
+    <div class="threshold-wrap">
+      <span class="threshold-label">Margin Threshold</span>
+      <input type="range" id="thresholdSlider" min="0" max="80" value="30" step="1" oninput="onThresholdChange(this.value)">
+      <span class="threshold-val" id="thresholdDisplay">30%</span>
+    </div>
+
+    <div class="results-hint">
+      <strong>What this means:</strong> Items shown here have a gross margin below your threshold. Margin = <em>(Price − Cost) ÷ Price × 100</em>. Items with a negative margin are selling below cost — losing money on every transaction. <strong>Use the slider above to adjust the flagging threshold.</strong>
+    </div>
+
+    <div class="top-services" id="top-services-wrap">
+      <div class="top-services-header">
+        Worst 10 Items by Margin
+        <span>Lowest margin first</span>
+      </div>
+      <div id="top-items-body"></div>
+    </div>
+
+    <div class="print-header" id="print-header">
+      <h2 id="print-clinic-name">Low Margin Report</h2>
+      <p id="print-date"></p>
+    </div>
+
+    <div class="full-report-table-wrap" id="full-report-wrap">
+      <div class="frt-header">
+        <div class="frt-title">Full Report — All Flagged Items</div>
+        <div class="frt-actions">
+          <button class="btn-csv" onclick="exportCSV()">↓ Export CSV</button>
+          <button class="btn-pdf" onclick="savePDF()">↓ Save as PDF</button>
+        </div>
+      </div>
+      <div style="overflow-x:auto">
+        <table class="frt-table">
+          <thead><tr id="frt-thead"></tr></thead>
+          <tbody id="frt-tbody"></tbody>
+        </table>
+      </div>
+      <div class="frt-count" id="frt-count"></div>
+    </div>
+
+    <div class="full-report-cta">
+      <h3>Want the Full Report?</h3>
+      <p>View all flagged items with sortable columns, CSV export, and PDF — all inline without leaving this page.</p>
+      <button class="btn-full-report" id="btn-full-report" onclick="toggleFullReport()">View Full Report →</button>
+      <br/>
+      <button class="btn-restart" onclick="restart()">← Run Another Report</button>
+    </div>
+
+  </div><!-- /slide-5 -->
+
+</div><!-- /wizard -->
+
+<script>
+// ── STATE ──────────────────────────────────────────────────────────
+let selectedPMS = null;
+let fileContent = null;
+let allItems = [];
+let threshold = 30;
+let sortCol = 'margin';
+let sortDir = 1;
+let fullReportVisible = false;
+
+const TYPE_MAP = {S:'Service',I:'Inventory',G:'Group',D:'Dispensing'};
+
+const PMS_CONFIG = {
+  cornerstone: {
+    dropTitle: 'Invoice Item Setup Report',
+    hint: 'In Cornerstone: Reports → Inventory → Invoice Item Setup → Export to CSV',
+    uploadSub: 'Export the Invoice Item Setup report from Cornerstone and drop it below. Your data stays in your browser — nothing is sent anywhere.'
+  },
+  avimark: {
+    dropTitle: 'Item List',
+    hint: 'In AVImark: Reports → Inventory → Item List → Export to CSV',
+    uploadSub: 'Export the Item List from AVImark and drop it below. Your data stays in your browser — nothing is sent anywhere.'
+  }
+};
+
+// ── NAVIGATION ─────────────────────────────────────────────────────
+function goTo(step) {
+  document.querySelectorAll('.slide').forEach(s => s.classList.remove('active'));
+  document.getElementById('slide-' + step).classList.add('active');
+  updateProgress(step);
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+function updateProgress(current) {
+  for (let i = 1; i <= 5; i++) {
+    const dot = document.getElementById('dot-' + i);
+    dot.classList.remove('active','done');
+    if (i < current) { dot.classList.add('done'); dot.textContent = '✓'; }
+    else if (i === current) { dot.classList.add('active'); dot.textContent = i; }
+    else { dot.textContent = i; }
+  }
+  for (let i = 1; i <= 4; i++) {
+    document.getElementById('line-' + i).classList.toggle('done', i < current);
+  }
+}
+
+// ── PMS SELECTION ──────────────────────────────────────────────────
+function selectPMS(pms, el) {
+  selectedPMS = pms;
+  document.querySelectorAll('.pms-option').forEach(o => o.classList.remove('selected'));
+  el.classList.add('selected');
+  const cfg = PMS_CONFIG[pms];
+  document.getElementById('drop-title-1').textContent = cfg.dropTitle;
+  document.getElementById('hint1').textContent = cfg.hint;
+  document.getElementById('upload-sub').textContent = cfg.uploadSub;
+  setTimeout(() => goTo(2), 200);
+}
+
+// ── FILE HANDLING ──────────────────────────────────────────────────
+function dzOver(e,el){e.preventDefault();el.classList.add('over');}
+function dzLeave(el){el.classList.remove('over');}
+function dzDrop(e,el){
+  e.preventDefault();
+  dzLeave(el);
+  const f = e.dataTransfer.files[0];
+  if(f) readFile(f);
+}
+function loadFile(input){
+  const f = input.files[0];
+  if(f) readFile(f);
+}
+
+function readFile(f) {
+  const r = new FileReader();
+  r.onload = e => {
+    fileContent = e.target.result;
+    document.getElementById('fn1').textContent = '✓ ' + f.name;
+    document.getElementById('dz1').classList.add('loaded');
+    document.getElementById('b1').textContent = 'Loaded';
+    document.getElementById('b1').className = 'drop-badge badge-ok';
+    setTimeout(() => goTo(3), 400);
+  };
+  r.readAsText(f);
+}
+
+// ── ANALYSIS ───────────────────────────────────────────────────────
+function analyze() {
+  const clinicName = (document.getElementById('clinic-name').value || '').trim();
+  goTo(4);
+  setTimeout(() => {
+    try {
+      allItems = parseItems(fileContent);
+      showResults(clinicName);
+    } catch(e) {
+      alert('Could not parse the CSV file. Please ensure it is a valid export.\n\n' + e.message);
+      goTo(3);
+    }
+  }, 500);
+}
+
+function parseCSVLine(line) {
+  const result = [];
+  let current = '';
+  let inQuotes = false;
+  for (let i = 0; i < line.length; i++) {
+    const ch = line[i];
+    if (ch === '"') {
+      if (inQuotes && line[i+1] === '"') { current += '"'; i++; }
+      else inQuotes = !inQuotes;
+    } else if (ch === ',' && !inQuotes) {
+      result.push(current.trim());
+      current = '';
+    } else {
+      current += ch;
+    }
+  }
+  result.push(current.trim());
+  return result;
+}
+
+function parseItems(text) {
+  const lines = text.split(/\r?\n/);
+  const items = [];
+  for (let i = 1; i < lines.length; i++) {
+    const line = lines[i];
+    if (!line.trim()) continue;
+    const cols = parseCSVLine(line);
+    if (cols.length < 15) continue;
+    const status = (cols[14] || '').trim();
+    if (status !== '1') continue;
+    const price = parseFloat(cols[10]);
+    const cost  = parseFloat(cols[12]);
+    if (isNaN(price) || isNaN(cost)) continue;
+    if (price <= 0 || cost <= 0) continue;
+    const margin = ((price - cost) / price) * 100;
+    items.push({
+      id:          (cols[4]  || '').trim(),
+      name:        ((cols[5] || '').trim() || (cols[6] || '').trim()),
+      invoiceDesc: (cols[6]  || '').trim(),
+      category:    ((cols[1] || '').trim() || (cols[3] || '').trim()),
+      subcat:      (cols[3]  || '').trim(),
+      typeCode:    (cols[7]  || '').trim().toUpperCase(),
+      price,
+      cost,
+      margin,
+    });
+  }
+  return items;
+}
+
+// ── SHOW RESULTS ───────────────────────────────────────────────────
+function showResults(clinicName) {
+  document.getElementById('results-title').textContent = clinicName
+    ? clinicName + ' — Margin Analysis'
+    : 'Here\'s what we found';
+
+  const dateStr = new Date().toLocaleDateString('en-CA',{year:'numeric',month:'long',day:'numeric'});
+  document.getElementById('print-clinic-name').textContent = (clinicName || 'Clinic') + ' — Low Margin Report';
+  document.getElementById('print-date').textContent = 'Generated ' + dateStr + ' · Vet INC';
+
+  fullReportVisible = false;
+  document.getElementById('full-report-wrap').classList.remove('visible');
+  document.getElementById('btn-full-report').textContent = 'View Full Report →';
+
+  renderResults();
+  goTo(5);
+  sendWebhook(clinicName);
+}
+
+function renderResults() {
+  const belowThreshold = allItems.filter(i => i.margin < threshold);
+  const belowCost      = allItems.filter(i => i.margin < 0);
+
+  // Hero
+  const pct = allItems.length > 0 ? Math.round(belowThreshold.length / allItems.length * 100) : 0;
+  document.getElementById('hero-flagged-num').textContent = belowThreshold.length.toLocaleString();
+  document.getElementById('hero-flagged-label').textContent =
+    `Items flagged below ${threshold}% margin — ${pct}% of your active inventory`;
+
+  // Summary cards
+  const weeklyLoss = belowCost.reduce((acc, i) => acc + (i.cost - i.price), 0);
+  const annualRisk = Math.round(weeklyLoss * 52);
+  document.getElementById('summary-cards').innerHTML = `
+    <div class="summary-card">
+      <div class="summary-val">${allItems.length.toLocaleString()}</div>
+      <div class="summary-label">Items Analyzed</div>
+    </div>
+    <div class="summary-card">
+      <div class="summary-val orange">${belowThreshold.length.toLocaleString()}</div>
+      <div class="summary-label">Below Threshold</div>
+    </div>
+    <div class="summary-card">
+      <div class="summary-val red">${belowCost.length.toLocaleString()}</div>
+      <div class="summary-label">Selling Below Cost</div>
+    </div>
+    <div class="summary-card">
+      <div class="summary-val${annualRisk > 0 ? ' red' : ''}">${annualRisk > 0 ? '$' + annualRisk.toLocaleString() : '$0'}</div>
+      <div class="summary-label">Est. Annual at Risk</div>
+    </div>
+  `;
+
+  // Top 10 worst
+  const worst10 = [...allItems]
+    .filter(i => i.margin < threshold)
+    .sort((a, b) => a.margin - b.margin)
+    .slice(0, 10);
+
+  if (worst10.length === 0) {
+    document.getElementById('top-items-body').innerHTML =
+      '<div style="padding:24px;text-align:center;color:var(--muted);font-size:.85rem">No items below the current threshold.</div>';
+  } else {
+    document.getElementById('top-items-body').innerHTML = worst10.map(item => {
+      const mc = marginClass(item.margin);
+      const typeLabel = TYPE_MAP[item.typeCode] || item.typeCode || '—';
+      return `<div class="top-item-row">
+        <div>
+          <div class="top-item-name">${esc(item.name)}</div>
+          <div class="td-muted" style="font-size:.7rem">${esc(typeLabel)}${item.category ? ' · ' + esc(item.category) : ''}</div>
+        </div>
+        <div style="color:var(--muted);font-size:.75rem;text-align:right">$${item.price.toFixed(2)}</div>
+        <div style="color:var(--muted);font-size:.75rem;text-align:right">Cost $${item.cost.toFixed(2)}</div>
+        <div><span class="margin-pill ${mc}">${item.margin.toFixed(1)}%</span></div>
+      </div>`;
+    }).join('');
+  }
+
+  if (fullReportVisible) renderFullTable();
+}
+
+function marginClass(m) {
+  if (m < 0)          return 'margin-red';
+  if (m < 15)         return 'margin-orange';
+  if (m < threshold)  return 'margin-yellow';
+  return 'margin-green';
+}
+
+// ── THRESHOLD ──────────────────────────────────────────────────────
+function onThresholdChange(val) {
+  threshold = parseInt(val, 10);
+  document.getElementById('thresholdDisplay').textContent = threshold + '%';
+  renderResults();
+}
+
+// ── FULL REPORT ────────────────────────────────────────────────────
+function toggleFullReport() {
+  if (!fullReportVisible) {
+    renderFullTable();
+    document.getElementById('full-report-wrap').classList.add('visible');
+    document.getElementById('btn-full-report').textContent = 'Hide Full Report ↑';
+    fullReportVisible = true;
+  } else {
+    document.getElementById('full-report-wrap').classList.remove('visible');
+    document.getElementById('btn-full-report').textContent = 'View Full Report →';
+    fullReportVisible = false;
+  }
+}
+
+function renderFullTable() {
+  const displayItems = [...allItems]
+    .filter(i => i.margin < threshold)
+    .sort((a, b) => {
+      let va = a[sortCol], vb = b[sortCol];
+      if (typeof va === 'string') va = va.toLowerCase();
+      if (typeof vb === 'string') vb = vb.toLowerCase();
+      if (va < vb) return -sortDir;
+      if (va > vb) return  sortDir;
+      return 0;
+    });
+
+  const cols = [
+    {key:'id',     label:'Item ID'},
+    {key:'name',   label:'Name'},
+    {key:'category',label:'Category'},
+    {key:'typeCode',label:'Type'},
+    {key:'price',  label:'Price',  right:true},
+    {key:'cost',   label:'Cost',   right:true},
+    {key:'margin', label:'Margin %',right:true},
+  ];
+
+  document.getElementById('frt-thead').innerHTML = cols.map(c =>
+    `<th data-col="${c.key}" class="${sortCol===c.key?'sorted':''}" style="${c.right?'text-align:right':''}" onclick="sortFullTable('${c.key}')">${c.label} <span style="opacity:.5;font-size:.65rem">${sortCol===c.key?(sortDir===1?'↑':'↓'):'↕'}</span></th>`
+  ).join('') + '<th>Flag</th>';
+
+  document.getElementById('frt-tbody').innerHTML = displayItems.map(item => {
+    const mc = marginClass(item.margin);
+    const typeLabel = TYPE_MAP[item.typeCode] || item.typeCode || '—';
+    const flagHtml = item.margin < 0
+      ? '<span class="flag-pill">Below Cost</span>'
+      : '<span class="flag-pill">Low Margin</span>';
+    return `<tr>
+      <td class="td-muted" style="font-size:.75rem">${esc(item.id)}</td>
+      <td class="td-name">${esc(item.name)}${item.invoiceDesc && item.invoiceDesc !== item.name ? '<div class="td-muted" style="font-weight:400;font-size:.7rem">'+esc(item.invoiceDesc)+'</div>' : ''}</td>
+      <td class="td-muted">${esc(item.category)}${item.subcat && item.subcat !== item.category ? '<div style="font-size:.7rem">'+esc(item.subcat)+'</div>' : ''}</td>
+      <td style="font-size:.7rem">${esc(typeLabel)}</td>
+      <td style="text-align:right;font-variant-numeric:tabular-nums">$${item.price.toFixed(2)}</td>
+      <td style="text-align:right;font-variant-numeric:tabular-nums">$${item.cost.toFixed(2)}</td>
+      <td style="text-align:right"><span class="margin-pill ${mc}">${item.margin.toFixed(1)}%</span></td>
+      <td>${flagHtml}</td>
+    </tr>`;
+  }).join('') || '<tr><td colspan="8" style="text-align:center;padding:24px;color:var(--muted)">No items match the current filter.</td></tr>';
+
+  document.getElementById('frt-count').textContent =
+    displayItems.length.toLocaleString() + ' item' + (displayItems.length !== 1 ? 's' : '') + ' shown';
+}
+
+function sortFullTable(col) {
+  if (sortCol === col) sortDir *= -1;
+  else { sortCol = col; sortDir = 1; }
+  if (fullReportVisible) renderFullTable();
+}
+
+// ── EXPORT CSV ─────────────────────────────────────────────────────
+function exportCSV() {
+  if (!allItems.length) return;
+  const items = [...allItems].filter(i => i.margin < threshold).sort((a,b) => a.margin - b.margin);
+  const header = ['Item ID','Name','Invoice Description','Category','Sub-Category','Type','Price','Cost','Margin %','Flag'];
+  const rows = [header.join(',')];
+  for (const item of items) {
+    const flag = item.margin < 0 ? 'Below Cost' : 'Low Margin';
+    const typeLabel = TYPE_MAP[item.typeCode] || item.typeCode || '';
+    rows.push([
+      cc(item.id), cc(item.name), cc(item.invoiceDesc),
+      cc(item.category), cc(item.subcat), cc(typeLabel),
+      item.price.toFixed(2), item.cost.toFixed(2), item.margin.toFixed(2), flag
+    ].join(','));
+  }
+  const blob = new Blob([rows.join('\n')], {type:'text/csv'});
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'low-margin-report-' + new Date().toISOString().slice(0,10) + '.csv';
+  a.click();
+  URL.revokeObjectURL(a.href);
+}
+
+function cc(v) {
+  const s = String(v || '');
+  return (s.includes(',') || s.includes('"') || s.includes('\n'))
+    ? '"' + s.replace(/"/g,'""') + '"' : s;
+}
+
+// ── SAVE PDF ───────────────────────────────────────────────────────
+function savePDF() {
+  if (!fullReportVisible) {
+    renderFullTable();
+    document.getElementById('full-report-wrap').classList.add('visible');
+    fullReportVisible = true;
+    document.getElementById('btn-full-report').textContent = 'Hide Full Report ↑';
+  }
+  window.print();
+}
+
+// ── WEBHOOK ────────────────────────────────────────────────────────
+function sendWebhook(clinicName) {
+  try {
+    const belowCost = allItems.filter(i => i.margin < 0);
+    const worst = [...allItems].sort((a,b) => a.margin - b.margin).slice(0,10)
+      .map(i => ({id:i.id,name:i.name,price:i.price,cost:i.cost,margin:parseFloat(i.margin.toFixed(2))}));
+    fetch('https://n8n.wildeautomations.com/webhook/low-margin-report', {
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({
+        clinicName: clinicName || 'Unknown',
+        pms: selectedPMS,
+        totalItems: allItems.length,
+        itemsBelowThreshold: allItems.filter(i => i.margin < threshold).length,
+        itemsBelowCost: belowCost.length,
+        threshold,
+        topWorstItems: worst,
+      }),
+    }).catch(()=>{});
+  } catch(e){}
+}
+
+// ── RESTART ────────────────────────────────────────────────────────
+function restart() {
+  selectedPMS = null;
+  fileContent = null;
+  allItems = [];
+  threshold = 30;
+  sortCol = 'margin';
+  sortDir = 1;
+  fullReportVisible = false;
+  document.querySelectorAll('.pms-option').forEach(o => o.classList.remove('selected'));
+  document.getElementById('clinic-name').value = '';
+  document.getElementById('fn1').textContent = '';
+  document.getElementById('dz1').classList.remove('loaded');
+  document.getElementById('b1').textContent = 'Required';
+  document.getElementById('b1').className = 'drop-badge badge-req';
+  document.getElementById('thresholdSlider').value = 30;
+  document.getElementById('thresholdDisplay').textContent = '30%';
+  document.getElementById('full-report-wrap').classList.remove('visible');
+  document.getElementById('btn-full-report').textContent = 'View Full Report →';
+  goTo(1);
+}
+
+function esc(s) {
+  return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+</script>
+</body>
+</html>

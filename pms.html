@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>PMS Integration — Vet INC</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{--blue:#2563eb;--blue-light:#60a5fa;--blue-dim:#eff6ff;--blue-border:#dbeafe;--navy:#1e3a5f;--muted:#64748b;--bg:#f0f6ff;--white:#fff;--purple:#7c3aed;--green:#16a34a;}
+body{background:var(--bg);color:var(--navy);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-serif;min-height:100vh}
+
+nav{background:var(--white);border-bottom:1px solid var(--blue-border);padding:0 40px;height:64px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;box-shadow:0 1px 12px rgba(37,99,235,.06)}
+.nav-logo{display:flex;align-items:center;gap:10px;text-decoration:none}
+.nav-logo-icon{width:38px;height:38px;background:linear-gradient(135deg,var(--blue),var(--blue-light));border-radius:10px;display:flex;align-items:center;justify-content:center;box-shadow:0 2px 8px rgba(37,99,235,.25)}
+.nav-logo-text{font-size:1.15rem;font-weight:800;color:var(--navy)}.nav-logo-text span{color:var(--blue)}
+.nav-links{display:flex;gap:4px}
+.nav-link{text-decoration:none;color:var(--muted);font-size:.88rem;font-weight:500;padding:7px 15px;border-radius:8px;transition:all .15s}
+.nav-link:hover{background:var(--blue-dim);color:var(--blue)}
+.nav-link.active{color:var(--purple);background:rgba(124,58,237,.08)}
+.nav-cta{background:var(--blue);color:#fff!important;border-radius:8px}
+.nav-cta:hover{background:#1d4ed8!important}
+
+/* HERO */
+.page-header{background:linear-gradient(180deg,var(--white) 0%,var(--bg) 100%);border-bottom:1px solid var(--blue-border);padding:64px 24px 56px;text-align:center;position:relative;overflow:hidden}
+.page-header-glow{position:absolute;top:-60px;left:50%;transform:translateX(-50%);width:600px;height:350px;background:radial-gradient(ellipse,rgba(124,58,237,.06) 0%,transparent 70%);pointer-events:none}
+.page-label{font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--purple);margin-bottom:10px}
+.page-header h1{font-size:2.5rem;font-weight:900;color:var(--navy);margin-bottom:14px;line-height:1.1}
+.page-header p{font-size:.95rem;color:var(--muted);line-height:1.75;max-width:600px;margin:0 auto}
+
+.section{max-width:1000px;margin:0 auto;padding:56px 24px}
+.section-label{font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);margin-bottom:10px}
+.section-title{font-size:1.5rem;font-weight:900;color:var(--navy);margin-bottom:10px}
+.section-sub{font-size:.9rem;color:var(--muted);line-height:1.7;max-width:620px;margin-bottom:32px}
+
+/* WHAT WE ARE */
+.positioning{background:var(--white);border:1px solid var(--blue-border);border-radius:16px;padding:36px;margin-bottom:48px;display:grid;grid-template-columns:1fr 1fr;gap:32px}
+@media(max-width:680px){.positioning{grid-template-columns:1fr}}
+.pos-side{border-radius:12px;padding:24px}
+.pos-side.blue{background:var(--blue-dim);border:1px solid var(--blue-border)}
+.pos-side.purple{background:rgba(124,58,237,.05);border:1px solid rgba(124,58,237,.15)}
+.pos-label{font-size:.65rem;font-weight:700;text-transform:uppercase;letter-spacing:.1em;margin-bottom:8px}
+.pos-label.blue{color:var(--blue)}
+.pos-label.purple{color:var(--purple)}
+.pos-title{font-size:1rem;font-weight:800;color:var(--navy);margin-bottom:8px}
+.pos-desc{font-size:.82rem;color:var(--muted);line-height:1.65}
+
+/* OFFER CARDS */
+.offer-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:16px;margin-bottom:48px}
+.offer-card{background:var(--white);border:1px solid var(--blue-border);border-radius:14px;padding:26px;transition:all .2s}
+.offer-card:hover{border-color:rgba(124,58,237,.3);box-shadow:0 4px 20px rgba(124,58,237,.08)}
+.offer-icon{width:44px;height:44px;border-radius:11px;background:linear-gradient(135deg,var(--purple),#a78bfa);display:flex;align-items:center;justify-content:center;margin-bottom:16px;box-shadow:0 3px 10px rgba(124,58,237,.2)}
+.offer-title{font-size:.95rem;font-weight:700;color:var(--navy);margin-bottom:8px}
+.offer-desc{font-size:.8rem;color:var(--muted);line-height:1.65}
+
+/* CONSULTING SECTION */
+.consulting-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:48px}
+@media(max-width:680px){.consulting-grid{grid-template-columns:1fr}}
+.consult-card{background:var(--white);border:1px solid var(--blue-border);border-radius:14px;padding:24px;border-left:4px solid var(--purple)}
+.consult-title{font-size:.92rem;font-weight:700;color:var(--navy);margin-bottom:6px}
+.consult-desc{font-size:.8rem;color:var(--muted);line-height:1.65}
+
+/* PROCESS */
+.process-steps{display:flex;flex-direction:column;gap:0;margin-bottom:48px;position:relative}
+.process-step{display:grid;grid-template-columns:auto 1fr;gap:20px;padding:24px 0;position:relative}
+.process-step:not(:last-child)::after{content:'';position:absolute;left:19px;top:60px;bottom:0;width:2px;background:var(--blue-border)}
+.step-circle{width:40px;height:40px;border-radius:50%;background:linear-gradient(135deg,var(--purple),#a78bfa);color:#fff;font-size:.9rem;font-weight:900;display:flex;align-items:center;justify-content:center;flex-shrink:0;box-shadow:0 3px 10px rgba(124,58,237,.2);position:relative;z-index:1}
+.step-body{padding-top:8px}
+.step-title{font-size:.95rem;font-weight:700;color:var(--navy);margin-bottom:6px}
+.step-desc{font-size:.82rem;color:var(--muted);line-height:1.65}
+
+/* PMS */
+.pms-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:12px;margin-bottom:12px}
+.pms-card{background:var(--white);border:1px solid var(--blue-border);border-radius:12px;padding:20px;text-align:center}
+.pms-abbr{width:48px;height:48px;border-radius:12px;background:var(--blue-dim);display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:800;color:var(--blue);margin:0 auto 10px}
+.pms-name{font-size:.85rem;font-weight:700;color:var(--navy);margin-bottom:3px}
+.pms-status{font-size:.68rem;color:#94a3b8}
+
+/* CTA */
+.cta-block{background:linear-gradient(135deg,var(--purple),#6d28d9);border-radius:20px;padding:48px 40px;text-align:center;color:#fff;margin-top:48px}
+.cta-block h2{font-size:1.8rem;font-weight:900;margin-bottom:12px}
+.cta-block p{font-size:.92rem;opacity:.85;line-height:1.7;max-width:500px;margin:0 auto 28px}
+.cta-btn{display:inline-flex;align-items:center;gap:8px;background:#fff;color:var(--purple);padding:14px 28px;border-radius:10px;font-size:.95rem;font-weight:700;text-decoration:none;transition:all .2s}
+.cta-btn:hover{transform:translateY(-2px);box-shadow:0 6px 20px rgba(0,0,0,.2)}
+
+footer{background:var(--navy);color:rgba(255,255,255,.5);padding:28px 40px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;margin-top:0}
+.footer-logo{display:flex;align-items:center;gap:8px;text-decoration:none}
+.footer-logo-icon{width:30px;height:30px;background:linear-gradient(135deg,var(--blue),var(--blue-light));border-radius:7px;display:flex;align-items:center;justify-content:center}
+.footer-logo-text{font-size:.95rem;font-weight:700;color:#fff}.footer-logo-text span{color:var(--blue-light)}
+.footer-links{display:flex;gap:20px;font-size:.82rem}
+.footer-links a{color:rgba(255,255,255,.5);text-decoration:none;transition:color .15s}
+.footer-links a:hover{color:#fff}
+.footer-copy{font-size:.75rem;color:rgba(255,255,255,.3);width:100%}
+</style>
+</head>
+<body>
+
+<nav>
+  <a class="nav-logo" href="index.html">
+    <div class="nav-logo-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg></div>
+    <div class="nav-logo-text">Vet <span>INC</span></div>
+  </a>
+  <div class="nav-links">
+    <a class="nav-link" href="reports.html">Reports</a>
+    <a class="nav-link active" href="pms.html">PMS Integration</a>
+    <a class="nav-link nav-cta" href="index.html#contact">Contact</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<div class="page-header">
+  <div class="page-header-glow"></div>
+  <div class="page-label">PMS Integration & Consulting</div>
+  <h1>We Don't Just Report.<br/>We Fix the Problem.</h1>
+  <p>Vet INC works directly inside your clinic's Practice Management System to implement automations, optimize your pricing, and streamline inventory — with expert guidance every step of the way.</p>
+</div>
+
+<div class="section">
+
+  <!-- WHAT WE ARE -->
+  <div class="section-label">Our Approach</div>
+  <div class="section-title">Consulting + Hands-On Implementation</div>
+  <div class="section-sub">Most software vendors hand you a tool and walk away. We come in as a partner — understanding your clinic's workflow, identifying what's costing you time and money, and building the solution directly inside your PMS.</div>
+
+  <div class="positioning">
+    <div class="pos-side blue">
+      <div class="pos-label blue">Without Us</div>
+      <div class="pos-title">Manual, Slow, and Leaking Revenue</div>
+      <div class="pos-desc">Prices haven't been touched in years. Inventory is received by hand. Staff spend hours on tasks that should be automatic. You're leaving money on the table and burning out your team.</div>
+    </div>
+    <div class="pos-side purple">
+      <div class="pos-label purple">With Vet INC</div>
+      <div class="pos-title">Automated, Optimized, and Running Smoothly</div>
+      <div class="pos-desc">Pricing is up to date and strategically rounded. Inventory receives itself. Reorders happen before you run out. Your team focuses on patients — not spreadsheets.</div>
+    </div>
+  </div>
+
+  <!-- WHAT WE DO -->
+  <div class="section-label">What We Implement</div>
+  <div class="section-title">Features We Build Into Your PMS</div>
+  <div class="section-sub">These aren't generic recommendations — we configure and deploy each of these directly inside your practice management system.</div>
+
+  <div class="offer-grid">
+
+    <div class="offer-card">
+      <div class="offer-icon">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg>
+      </div>
+      <div class="offer-title">99 Cent Price Rounding</div>
+      <div class="offer-desc">We update your entire price list to .99 endings — a proven strategy that increases perceived value and can meaningfully improve revenue without raising prices. Done in one pass, directly in your PMS.</div>
+    </div>
+
+    <div class="offer-card">
+      <div class="offer-icon">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 7H4a2 2 0 00-2 2v10a2 2 0 002 2h16a2 2 0 002-2V9a2 2 0 00-2-2z"/><path d="M16 3H8a2 2 0 00-2 2v2h12V5a2 2 0 00-2-2z"/><path d="M12 12v4M10 14h4"/></svg>
+      </div>
+      <div class="offer-title">Automated Receiving</div>
+      <div class="offer-desc">We configure your PMS to automatically update inventory quantities when shipments arrive. No manual receiving, no data entry delays — your stock levels are accurate in real time.</div>
+    </div>
+
+    <div class="offer-card">
+      <div class="offer-icon">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>
+      </div>
+      <div class="offer-title">Smart Reorder & Inventory Management</div>
+      <div class="offer-desc">We set minimum stock thresholds for every critical item in your inventory. When levels drop, reorder suggestions are automatically generated — so you never run out of medications or supplies unexpectedly.</div>
+    </div>
+
+    <div class="offer-card">
+      <div class="offer-icon">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round"><path d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/></svg>
+      </div>
+      <div class="offer-title">Low Stock Alerts</div>
+      <div class="offer-desc">Real-time notifications sent to the right people the moment something drops below threshold — before it becomes a problem for your patients or your workflow.</div>
+    </div>
+
+    <div class="offer-card">
+      <div class="offer-icon">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M9 9h6M9 12h6M9 15h4"/></svg>
+      </div>
+      <div class="offer-title">Inflation-Adjusted Pricing</div>
+      <div class="offer-desc">Using our Price Analyzer report as a starting point, we identify every stale service and implement updated pricing directly in your PMS — not just flagging it, but actually making the changes.</div>
+    </div>
+
+    <div class="offer-card">
+      <div class="offer-icon">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+      </div>
+      <div class="offer-title">Ongoing Support & Optimization</div>
+      <div class="offer-desc">We don't disappear after setup. As your clinic grows or your PMS updates, we stay available to adjust configurations, add new automations, and keep everything running smoothly.</div>
+    </div>
+
+  </div>
+
+  <!-- CONSULTING -->
+  <div class="section-label">Advisory Services</div>
+  <div class="section-title">Expert Guidance, Not Just Software</div>
+  <div class="section-sub">Beyond implementation, we provide the strategic insight to help clinic owners and managers make better decisions. Think of us as an operations consultant who also knows your PMS inside out.</div>
+
+  <div class="consulting-grid">
+    <div class="consult-card">
+      <div class="consult-title">Pricing Strategy Review</div>
+      <div class="consult-desc">We analyze your full service price list against CPI benchmarks and competitor context, then provide clear recommendations on where to adjust — and by how much.</div>
+    </div>
+    <div class="consult-card">
+      <div class="consult-title">Workflow Audit</div>
+      <div class="consult-desc">We walk through your current clinic workflows and identify the manual tasks that are costing your team the most time. Then we tell you exactly what can be automated and how.</div>
+    </div>
+    <div class="consult-card">
+      <div class="consult-title">Inventory Optimization</div>
+      <div class="consult-desc">We review your current stock levels, reorder patterns, and supplier setup to eliminate overstocking and stockouts — and recommend the right minimums for your patient volume.</div>
+    </div>
+    <div class="consult-card">
+      <div class="consult-title">Revenue Gap Analysis</div>
+      <div class="consult-desc">We identify services that are underpriced, underutilized, or missing entirely from your offering — with real numbers showing what you could be capturing.</div>
+    </div>
+  </div>
+
+  <!-- HOW IT WORKS -->
+  <div class="section-label">Process</div>
+  <div class="section-title">How We Work With Your Clinic</div>
+  <div class="section-sub" style="margin-bottom:28px">A straightforward engagement — no long contracts, no mystery deliverables.</div>
+
+  <div class="process-steps">
+    <div class="process-step">
+      <div class="step-circle">1</div>
+      <div class="step-body">
+        <div class="step-title">Discovery Call</div>
+        <div class="step-desc">We start with a conversation about your clinic — your PMS, your current pain points, and what success looks like for you. No pitch, just questions.</div>
+      </div>
+    </div>
+    <div class="process-step">
+      <div class="step-circle">2</div>
+      <div class="step-body">
+        <div class="step-title">We Review Your Data</div>
+        <div class="step-desc">You share exports from your PMS. We run the analysis, identify the gaps, and come back with a clear picture of what's costing you money and what we can fix.</div>
+      </div>
+    </div>
+    <div class="process-step">
+      <div class="step-circle">3</div>
+      <div class="step-body">
+        <div class="step-title">Implementation</div>
+        <div class="step-desc">We get access to your PMS and implement everything we scoped together — pricing updates, inventory configuration, automation rules. You review and approve every change.</div>
+      </div>
+    </div>
+    <div class="process-step">
+      <div class="step-circle">4</div>
+      <div class="step-body">
+        <div class="step-title">Handoff & Ongoing Support</div>
+        <div class="step-desc">We walk your team through everything that changed and why. From there, we stay available for questions, adjustments, and new automations as your clinic grows.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SUPPORTED PMS -->
+  <div class="section-label">Supported Systems</div>
+  <div class="section-title" style="margin-bottom:16px">Works With Your PMS</div>
+  <div class="pms-grid" style="grid-template-columns:1fr 1fr;max-width:380px">
+    <div class="pms-card"><div style="width:64px;height:64px;border-radius:12px;background:#fff;border:1px solid var(--blue-border);display:flex;align-items:center;justify-content:center;padding:8px;margin:0 auto 8px"><img src="data:image/png;base64,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" style="width:100%;height:100%;object-fit:contain"/></div><div class="pms-name">Cornerstone</div><div class="pms-status live-status">Supported</div></div>
+    <div class="pms-card"><div style="width:64px;height:64px;border-radius:12px;background:#fff;border:1px solid var(--blue-border);display:flex;align-items:center;justify-content:center;padding:8px;margin:0 auto 8px"><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAIAAAACACAMAAAD04JH5AAAAclBMVEVHcEwnwcEnwsPzMTG6KT0nwsMnwsPzMDAEF2EgnavzMTHwMTDzMTEmw8T0MDDyMC8mwcLyMTEnwcLDKzsCF2EeoK2LI0cCF2IINm8YfZgBF2MRWoNYHlQvGVoCF2ICF2ICGGIBF2DtMDAnvb4nwcIAB1x2lkIrAAAAIXRSTlMAN57oEPXh/l4ZiSnNw65GWGR5+jn7+J37+YD6+fqx5tKHmhXgAAAEa0lEQVR4nMWZ22KiMBBAsaYStPVWWrpsFwXl/39xQ2gt5jqTSTBPfeocM4eZZJJltLU7MOJ/oIXf5vnL7mHhN+s877ou324eE/6wHMIPK18/AGH38hN+IFgeHhn+G2FGG0XyO23l27lsZKN7JoQ5VGC/7ukEy3XyPGjJVxBe0tooCo8r/IiQTgW2tu/+NA+JVICFT6fCwZ38ewKhQmSEzdby6dkRYqqw8btnYIimgkg+PnwnVYiB4Co8AASyCp7C40Ug2hiUfGUTCDZubF0HhxDcJgnJVxBCVKC4Z0LAqrBDFh4/AioPxhMPlQBemKwnHjICrDBhug4WwX9cYcTC4yPwFSZ64fEjOGwM7TrIZetR8BMPceXmwpQ2+SqDrgJ/62YEMJxWePv1lubzN4U3dEjetnMhmD/FAaBtP97SE1ha4wjQ/vtIrIK1I3wDCISUNjoa0g0goQrOOjwBSKSC51x0ByAQYufBe0lQAIQKUfPgP42oAIMK0XYBclHUAaKpADsUmwDiqAA8k5sB6IUJfBS1ABCrAmJKYAUg2IgamTkAAvOQd6jxgAsgxEb0dMIDgO1R+BuxDwBlY8iEyg8ARggb10IAQDZCb4BBAC3AxtDhHBTAnQfCeBIM4EAgPdsgAGxtkjYURAGYbKROZnEAWmGiv1hhAe5ViDCdxwPcVIjzPhECIKtCpJl4IED79RHruTIMoP98f90/DqD//HO5Xp+fFo8B6FsR/iKWQCjmB+jbv+8yvERYHckISACR/Mst/oBAVgEFIJJ/nYYfEWgqIABuyVcIaCqAAe6SryIQVAAC9L0Ib4kvbQxWAQTQyy/fGn5Yz6EqQAD84eUuhBUmP4Aj+WoeQlTwAcjwoPgSYY9GcAN43NMJ8IXJCQBL/v3C9igHQEh4uQsoBCuA3H18eLkJqyMZAJt8dRfghckMYOo6SARoHkwAlq6DA4D2KB0gRviRAYSgAhCTryAAqgJXfv1nvPAXWZh8KtwBBH75TgRfYeLTnx89vERYOVXgv+GDC48fwdEm+Y97ynE3MoJdBZ7CPQOBFYGncc+AYFGBD8lPH35EMKnAMSceOoJ+YuIp3TMgvGoEi9cZAcy1eT8XgrUeFMfVDAjOclQ8PSdG8PaExCpAGnNCFYC3hVQqIG7vxTG+Csj5xSKyjQHDvKgqhA0u9rFUuGJuSNMVRwXSKFUUJmp8NTwrCtTsgFiYtAMQr4ZVYhAIKmh9n1V1yTJWNhxDkAUWJr3rsLpmdSUgsgpHENSjDPfismLlqa6bcyH+QhGgEa7GeWHNs/JcZMWJZzgNhiUKExzB0nXE3osd4NW5HFjQC2yj9cghAZrzqcyCAIA2Ou6AvB5SwJpafA7oFMi1ePLmwTWTkRKWGT+VaAmnCO7kO8tuXRVcROa8CdsAuRxt0j8lrquyYAVHFiJl2U5MoCNHWTVNUxN+/zeCXhVivR8Cl6YC/dkMjTBVgfBUE76KW2EiPVaREEYVorzcBq7h8Ex8sCQjUJP/H7mnlMQ8TexkAAAAAElFTkSuQmCC" style="width:100%;height:100%;object-fit:contain"/></div><div class="pms-name">AVImark</div><div class="pms-status live-status">Supported</div></div>
+  </div>
+  <p style="font-size:.8rem;color:var(--muted);margin-bottom:0">Currently supporting Cornerstone and AVImark. More PMS integrations coming soon — contact us if you use a different system.</p>
+
+  <!-- CTA -->
+  <div class="cta-block">
+    <h2>Let's Look at Your Clinic</h2>
+    <p>No commitment required. We'll review your data, show you what we find, and let the numbers speak for themselves.</p>
+    <a class="cta-btn" href="index.html#contact">Book a Discovery Call</a>
+  </div>
+
+</div>
+
+<footer>
+  <a class="footer-logo" href="index.html">
+    <div class="footer-logo-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg></div>
+    <div class="footer-logo-text">Vet <span>INC</span></div>
+  </a>
+  <div class="footer-links">
+    <a href="index.html">Home</a>
+    <a href="reports.html">Reports</a>
+    <a href="index.html#contact">Contact</a>
+  </div>
+  <div class="footer-copy">© 2026 Vet INC · Built by Wilde Automations</div>
+</footer>
+
+</body>
+</html>

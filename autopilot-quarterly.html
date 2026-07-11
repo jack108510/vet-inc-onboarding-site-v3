@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Quarterly Update — Autopilot Mode</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet"/>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --blue:#2563eb;--blue-light:#60a5fa;--blue-bg:#eff6ff;--blue-border:#dbeafe;
+  --green:#16a34a;--green-bg:#f0fdf4;
+  --red:#dc2626;--red-bg:#fef2f2;
+  --amber:#d97706;--amber-bg:#fffbeb;
+  --ink:#0f172a;--ink2:#334155;--dim:#64748b;--dimmer:#94a3b8;
+  --bg:#f8fafc;--white:#fff;--line:#e2e8f0;
+}
+body{font-family:'Inter',system-ui,sans-serif;background:var(--bg);color:var(--ink);-webkit-font-smoothing:antialiased;line-height:1.5}
+.report{max-width:700px;margin:0 auto;padding:32px 24px}
+
+.autopilot-banner{background:var(--ink);border-radius:14px;padding:24px;color:#fff;margin-bottom:20px;position:relative;overflow:hidden}
+.autopilot-banner::before{content:'';position:absolute;top:0;right:0;width:300px;height:200px;background:radial-gradient(circle,rgba(37,99,235,.3) 0%,transparent 60%)}
+.autopilot-mode-tag{display:inline-block;background:rgba(255,255,255,.12);padding:4px 12px;border-radius:20px;font-size:.65rem;font-weight:700;text-transform:uppercase;letter-spacing:.05em;margin-bottom:10px;position:relative}
+.autopilot-banner h2{font-size:1.3rem;font-weight:800;margin-bottom:6px;position:relative}
+.autopilot-banner p{font-size:.85rem;opacity:.7;position:relative}
+
+.header{background:var(--white);border:1px solid var(--line);border-radius:14px;padding:28px;margin-bottom:20px}
+.header-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px}
+.header-logo{font-size:1.2rem;font-weight:800;letter-spacing:-.5px}
+.header-logo span{color:var(--blue)}
+.header-date{font-size:.75rem;color:var(--dim);font-weight:500}
+.header h1{font-size:1.4rem;font-weight:800;letter-spacing:-.5px;margin-bottom:4px}
+.header-sub{font-size:.82rem;color:var(--dim)}
+
+.highlight-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:20px}
+@media(max-width:600px){.highlight-grid{grid-template-columns:1fr}}
+.highlight-card{background:var(--white);border:1px solid var(--line);border-radius:10px;padding:20px;text-align:center}
+.highlight-value{font-size:1.8rem;font-weight:800;letter-spacing:-1px}
+.highlight-value.green{color:var(--green)}
+.highlight-value.blue{color:var(--blue)}
+.highlight-label{font-size:.72rem;color:var(--dim);margin-top:2px}
+
+.section{background:var(--white);border:1px solid var(--line);border-radius:14px;padding:24px;margin-bottom:16px}
+.section-title{font-size:1rem;font-weight:700;margin-bottom:4px}
+.section-desc{font-size:.8rem;color:var(--dim);margin-bottom:16px}
+
+.change-item{display:grid;grid-template-columns:1fr auto;gap:8px;padding:12px 0;border-bottom:1px solid var(--line);align-items:center}
+.change-item:last-child{border:none}
+.change-code{font-family:'SF Mono',Monaco,monospace;font-size:.75rem;font-weight:600;color:var(--dim);margin-right:6px}
+.change-desc{font-size:.85rem;color:var(--ink2)}
+.change-prices{font-size:.85rem;margin-top:2px}
+.change-prices .old{color:var(--dim);text-decoration:line-through}
+.change-prices .new{font-weight:700}
+.change-prices .pct{color:var(--green);font-weight:600;margin-left:6px}
+.change-impact{text-align:right;font-size:.85rem;font-weight:700;color:var(--green)}
+
+.result-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+@media(max-width:600px){.result-grid{grid-template-columns:1fr}}
+.result-card{background:var(--bg);border-radius:10px;padding:16px}
+.result-label{font-size:.72rem;color:var(--dim);font-weight:600;text-transform:uppercase;letter-spacing:.03em;margin-bottom:4px}
+.result-value{font-size:1.2rem;font-weight:800}
+.result-value.up{color:var(--green)}
+.result-value.flat{color:var(--dim)}
+.result-note{font-size:.72rem;color:var(--dimmer);margin-top:2px}
+
+.hold-item{padding:10px 0;border-bottom:1px solid var(--line);font-size:.85rem}
+.hold-item:last-child{border:none}
+.hold-code{font-family:'SF Mono',Monaco,monospace;font-size:.75rem;font-weight:600;color:var(--dim)}
+.hold-reason{color:var(--dim);font-size:.78rem;margin-top:2px}
+
+.signoff{text-align:center;padding:24px 0;margin-top:8px}
+.signoff-line{font-size:.82rem;color:var(--dim);margin-bottom:8px}
+.signoff-name{font-weight:700;font-size:.9rem}
+.signoff-contact{font-size:.78rem;color:var(--dimmer)}
+
+.footer{text-align:center;padding:16px 0;font-size:.72rem;color:var(--dimmer);border-top:1px solid var(--line);margin-top:12px}
+</style>
+</head>
+<body>
+<div class="report" id="app"></div>
+
+<script>
+// ══════════════════════════════════════════════════════════════
+// DATA — Swap this object, report updates automatically
+// ══════════════════════════════════════════════════════════════
+const DATA = {
+  mode: "autopilot",
+  clinic: {
+    name: "Rosslyn Veterinary Hospital",
+    location: "Edmonton, AB",
+    pms: "AVImark",
+    period: "April 1 — June 30, 2026",
+    quarter: "Q2 2026"
+  },
+  highlights: {
+    annualImpact: "+$18,400",
+    codesUpdated: 14,
+    avgIncrease: "6.2%"
+  },
+  // What we changed — first 8 shown, rest collapsed
+  changes: [
+    { code: "EX001", desc: "Comprehensive Physical Exam",      old: 68.00,  new: 78.00,  annualImpact: 4200 },
+    { code: "VX005", desc: "Rabies Vaccine — 1yr",             old: 32.00,  new: 36.00,  annualImpact: 3100 },
+    { code: "DX012", desc: "Digital Radiograph — Single View", old: 95.00,  new: 110.00, annualImpact: 2800 },
+    { code: "LB003", desc: "CBC + Chemistry Panel",            old: 120.00, new: 132.00, annualImpact: 2400 },
+    { code: "SX001", desc: "Feline Neuter",                    old: 245.00, new: 268.00, annualImpact: 1900 },
+    { code: "VX012", desc: "DHPP Vaccine",                     old: 28.00,  new: 32.00,  annualImpact: 1600 },
+    { code: "EX015", desc: "Recheck Examination",              old: 45.00,  new: 52.00,  annualImpact: 1200 },
+    { code: "MD008", desc: "Ear Cytology",                     old: 38.00,  new: 44.00,  annualImpact: 900 },
+  ],
+  changesTotal: 14,  // total number of changes (if more than shown)
+  // Last quarter results
+  results: {
+    revenueChange: "+8.2%",
+    revenueNote: "vs same codes prior 90 days",
+    visitVolume: "No change ✓",
+    visitNote: "Price increase didn't reduce visits",
+    netCaptured: "+$12,840",
+    netNote: "from Q1 changes alone",
+    adjustedBack: 1,
+    adjustedNote: "slight overcorrection, fixed"
+  },
+  // What we held off on
+  holding: [
+    { code: "SX022", desc: "Declaw (front only)",      current: 180.00, suggested: 210.00, reason: "Usage down 40% YoY. Price may not matter if demand is phasing out. Revisiting Q3." },
+    { code: "MD015", desc: "OFA Hip Radiograph",       current: 220.00, suggested: 245.00, reason: "Only 3 visits in 90 days. Too low-volume to confidently measure impact." },
+    { code: "RX045", desc: "Apoquel 16mg (30 ct)",     current: 85.00,  suggested: 92.00,  reason: "Clients price-sensitive on recurring Rx. Monitoring before increasing." },
+  ],
+  nextReview: "September 2026",
+  contact: { name: "Jack Wilde", email: "jack@vetinc.ca", phone: "780-904-3599" }
+};
+
+// ══════════════════════════════════════════════════════════════
+// RENDER — don't touch below unless changing layout
+// ══════════════════════════════════════════════════════════════
+
+function fmt(n) { return '$' + n.toFixed(2); }
+function pct(oldP, newP) {
+  const v = ((newP - oldP) / oldP * 100);
+  return `<span class="pct">+${v.toFixed(1)}%</span>`;
+}
+
+const d = DATA;
+const c = d.clinic;
+const h = d.highlights;
+
+let html = `
+<div class="autopilot-banner">
+  <div class="autopilot-mode-tag">✈️ Autopilot — We Handled It</div>
+  <h2>Your ${c.quarter} fee schedule update is complete</h2>
+  <p>We reviewed your fee schedule, updated ${d.changesTotal} prices, and monitored last quarter's changes. Here's what happened.</p>
+</div>
+
+<div class="header">
+  <div class="header-top">
+    <div class="header-logo">Vet <span>INC</span></div>
+    <div class="header-date">${c.period}</div>
+  </div>
+  <h1>${c.name}</h1>
+  <div class="header-sub">${c.location} · ${c.pms} · Quarterly Review Complete</div>
+</div>
+
+<div class="highlight-grid">
+  <div class="highlight-card">
+    <div class="highlight-value green">${h.annualImpact}</div>
+    <div class="highlight-label">Estimated annual revenue impact</div>
+  </div>
+  <div class="highlight-card">
+    <div class="highlight-value blue">${h.codesUpdated}</div>
+    <div class="highlight-label">Prices updated this quarter</div>
+  </div>
+  <div class="highlight-card">
+    <div class="highlight-value">${h.avgIncrease}</div>
+    <div class="highlight-label">Average price increase</div>
+  </div>
+</div>
+
+<div class="section">
+  <div class="section-title">What We Changed This Quarter</div>
+  <div class="section-desc">These prices were below market rate. We brought them in line.</div>
+`;
+
+d.changes.forEach(item => {
+  html += `
+  <div class="change-item">
+    <div>
+      <span class="change-code">${item.code}</span><span class="change-desc">${item.desc}</span>
+      <div class="change-prices"><span class="old">${fmt(item.old)}</span> → <span class="new">${fmt(item.new)}</span>${pct(item.old, item.new)}</div>
+    </div>
+    <div class="change-impact">+$${item.annualImpact.toLocaleString()}/yr</div>
+  </div>`;
+});
+
+if (d.changesTotal > d.changes.length) {
+  html += `<div style="font-size:.78rem;color:var(--dimmer);margin-top:12px;text-align:right">+ ${d.changesTotal - d.changes.length} more codes updated</div>`;
+}
+
+html += `
+</div>
+
+<div class="section">
+  <div class="section-title">How Last Quarter's Changes Performed</div>
+  <div class="section-desc">90-day results from the previous quarter's updates.</div>
+  <div class="result-grid">
+    <div class="result-card">
+      <div class="result-label">Revenue on Changed Codes</div>
+      <div class="result-value up">${d.results.revenueChange}</div>
+      <div class="result-note">${d.results.revenueNote}</div>
+    </div>
+    <div class="result-card">
+      <div class="result-label">Visit Volume</div>
+      <div class="result-value flat">${d.results.visitVolume}</div>
+      <div class="result-note">${d.results.visitNote}</div>
+    </div>
+    <div class="result-card">
+      <div class="result-label">Net Revenue Captured</div>
+      <div class="result-value up">${d.results.netCaptured}</div>
+      <div class="result-note">${d.results.netNote}</div>
+    </div>
+    <div class="result-card">
+      <div class="result-label">Codes Adjusted Back</div>
+      <div class="result-value">${d.results.adjustedBack}</div>
+      <div class="result-note">${d.results.adjustedNote}</div>
+    </div>
+  </div>
+</div>
+
+<div class="section">
+  <div class="section-title">What We Held Off On</div>
+  <div class="section-desc">Codes that looked underpriced, but we're waiting for the right moment.</div>
+`;
+
+d.holding.forEach(item => {
+  html += `
+  <div class="hold-item">
+    <span class="hold-code">${item.code}</span> — ${item.desc}
+    <div class="hold-reason">${item.reason}</div>
+  </div>`;
+});
+
+html += `
+</div>
+
+<div class="signoff">
+  <div class="signoff-line">Next review: ${d.nextReview}</div>
+  <div class="signoff-line">Questions about these changes?</div>
+  <div class="signoff-name">${d.contact.name}</div>
+  <div class="signoff-contact">${d.contact.email} · ${d.contact.phone}</div>
+</div>
+
+<div class="footer">
+  <p>Vet INC · Automated Fee Schedule Management · vetinc.ca</p>
+</div>
+`;
+
+document.getElementById('app').innerHTML = html;
+</script>
+</body>
+</html>

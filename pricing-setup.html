@@ -1,0 +1,499 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Vet INC — Pricing Setup</title>
+<meta name="robots" content="noindex"/>
+<script>if(location.protocol==='http:'&&location.hostname!=='localhost')location.replace('https://'+location.hostname+location.pathname+location.search+location.hash)</script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --blue:#2563eb;--blue-dark:#1e3a5f;--blue-light:#60a5fa;
+  --navy:#0f172a;--surface:#f0f4ff;--border:#dbeafe;--muted:#64748b;--white:#fff;
+  --green:#10b981;--amber:#f59e0b;--red:#ef4444;
+}
+body{background:var(--navy);color:var(--white);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-serif;-webkit-font-smoothing:antialiased;min-height:100vh}
+
+nav{position:fixed;top:0;left:0;right:0;z-index:100;padding:0 32px;height:58px;display:flex;align-items:center;justify-content:space-between;background:rgba(15,23,42,.95);backdrop-filter:blur(12px);border-bottom:1px solid rgba(255,255,255,.06)}
+.logo{display:flex;align-items:center;gap:10px;text-decoration:none}
+.logo-box{width:32px;height:32px;background:var(--blue);border-radius:8px;display:flex;align-items:center;justify-content:center}
+.logo-box svg{width:16px;height:16px;fill:none;stroke:#fff;stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round}
+.logo-text{font-size:1rem;font-weight:800;color:var(--white)}.logo-text span{color:var(--blue-light)}
+.nav-right{font-size:.78rem;color:rgba(255,255,255,.35)}
+
+.page{padding:90px 24px 80px;max-width:600px;margin:0 auto}
+
+/* PROGRESS */
+.prog{margin-bottom:36px}
+.prog-top{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:10px}
+.prog-title{font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--blue-light)}
+.prog-num{font-size:.72rem;color:rgba(255,255,255,.3)}
+.prog-track{height:2px;background:rgba(255,255,255,.08);border-radius:99px}
+.prog-fill{height:100%;background:linear-gradient(90deg,var(--blue),var(--blue-light));border-radius:99px;transition:width .4s cubic-bezier(.4,0,.2,1)}
+
+/* CARD */
+.card{background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.07);border-radius:18px;padding:36px;display:none}
+.card.show{display:block;animation:up .28s ease}
+@keyframes up{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+
+.step-tag{display:inline-flex;align-items:center;gap:6px;background:rgba(37,99,235,.15);border:1px solid rgba(96,165,250,.15);color:var(--blue-light);border-radius:20px;padding:4px 12px;font-size:.67rem;font-weight:700;letter-spacing:.07em;text-transform:uppercase;margin-bottom:22px}
+.step-tag svg{width:12px;height:12px;fill:none;stroke:currentColor;stroke-width:2.5}
+h2{font-size:1.5rem;font-weight:800;line-height:1.2;margin-bottom:8px}
+.sub{font-size:.87rem;color:rgba(255,255,255,.45);line-height:1.6;margin-bottom:28px}
+
+/* STRATEGY CARDS */
+.strat-grid{display:grid;gap:10px}
+.strat{background:rgba(255,255,255,.04);border:1.5px solid rgba(255,255,255,.07);border-radius:13px;padding:18px 20px;cursor:pointer;transition:all .18s;display:flex;align-items:flex-start;gap:16px}
+.strat:hover{border-color:rgba(96,165,250,.35);background:rgba(37,99,235,.07)}
+.strat.sel{border-color:var(--blue);background:rgba(37,99,235,.14)}
+.strat-icon{width:42px;height:42px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:1.2rem;flex-shrink:0}
+.strat-body{}
+.strat-name{font-size:.95rem;font-weight:700;margin-bottom:3px}
+.strat-desc{font-size:.78rem;color:rgba(255,255,255,.45);line-height:1.45}
+.strat-tag{display:inline-block;font-size:.65rem;font-weight:700;padding:2px 8px;border-radius:6px;margin-top:6px}
+.tag-conservative{background:rgba(16,185,129,.12);color:#34d399}
+.tag-balanced{background:rgba(37,99,235,.15);color:var(--blue-light)}
+.tag-growth{background:rgba(245,158,11,.12);color:#fbbf24}
+.tag-custom{background:rgba(255,255,255,.07);color:rgba(255,255,255,.5)}
+
+/* CUSTOM RATE INPUT */
+.custom-rate{margin-top:16px;display:none}
+.custom-rate.visible{display:block}
+.rate-label{font-size:.75rem;font-weight:700;color:rgba(255,255,255,.45);text-transform:uppercase;letter-spacing:.06em;margin-bottom:10px}
+.rate-row{display:flex;align-items:center;gap:8px}
+.rate-input{width:90px;background:rgba(255,255,255,.06);border:1.5px solid rgba(255,255,255,.12);border-radius:9px;padding:10px 14px;font-size:1rem;font-weight:700;color:var(--white);font-family:inherit;outline:none;text-align:center;transition:border-color .2s}
+.rate-input:focus{border-color:var(--blue)}
+.rate-unit{font-size:.85rem;color:rgba(255,255,255,.4)}
+.rate-periods{display:flex;gap:6px;margin-top:10px}
+.rate-period{padding:7px 14px;border-radius:8px;font-size:.78rem;font-weight:600;background:rgba(255,255,255,.05);border:1.5px solid rgba(255,255,255,.08);color:rgba(255,255,255,.5);cursor:pointer;transition:all .15s}
+.rate-period:hover{border-color:rgba(96,165,250,.3);color:var(--white)}
+.rate-period.sel{border-color:var(--blue);background:rgba(37,99,235,.15);color:var(--blue-light)}
+
+/* SENSITIVE PRICES */
+.sensitive-intro{font-size:.82rem;color:rgba(255,255,255,.4);margin-bottom:14px;line-height:1.5}
+.check-grid{display:grid;gap:8px}
+.check-item{display:flex;align-items:flex-start;gap:12px;background:rgba(255,255,255,.03);border:1.5px solid rgba(255,255,255,.06);border-radius:11px;padding:14px 16px;cursor:pointer;transition:all .18s;user-select:none}
+.check-item:hover{border-color:rgba(255,255,255,.14)}
+.check-item.checked{border-color:rgba(239,68,68,.35);background:rgba(239,68,68,.06)}
+.check-box{width:20px;height:20px;border-radius:5px;border:1.5px solid rgba(255,255,255,.2);display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px;transition:all .15s}
+.check-item.checked .check-box{background:var(--red);border-color:var(--red)}
+.check-box svg{width:11px;height:11px;fill:none;stroke:#fff;stroke-width:3;stroke-linecap:round;stroke-linejoin:round;opacity:0;transition:opacity .15s}
+.check-item.checked .check-box svg{opacity:1}
+.check-text{}
+.check-name{font-size:.88rem;font-weight:700;margin-bottom:2px}
+.check-note{font-size:.74rem;color:rgba(255,255,255,.4);line-height:1.35}
+
+.add-custom{display:flex;gap:8px;margin-top:10px}
+.add-input{flex:1;background:rgba(255,255,255,.05);border:1.5px solid rgba(255,255,255,.08);border-radius:9px;padding:10px 14px;font-size:.88rem;color:var(--white);font-family:inherit;outline:none;transition:border-color .2s}
+.add-input::placeholder{color:rgba(255,255,255,.2)}
+.add-input:focus{border-color:rgba(255,255,255,.2)}
+.add-btn{padding:10px 16px;background:rgba(255,255,255,.07);border:1.5px solid rgba(255,255,255,.1);border-radius:9px;color:rgba(255,255,255,.6);font-size:.82rem;font-weight:600;cursor:pointer;font-family:inherit;transition:all .15s;white-space:nowrap}
+.add-btn:hover{background:rgba(255,255,255,.12);color:var(--white)}
+.custom-tags{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
+.ctag{display:flex;align-items:center;gap:6px;background:rgba(239,68,68,.1);border:1px solid rgba(239,68,68,.25);color:#fca5a5;border-radius:20px;padding:4px 10px 4px 12px;font-size:.75rem;font-weight:600}
+.ctag button{background:none;border:none;color:inherit;cursor:pointer;opacity:.7;font-size:.85rem;padding:0;line-height:1}
+.ctag button:hover{opacity:1}
+
+/* APPROVAL */
+.approval-grid{display:grid;gap:10px}
+.appr{background:rgba(255,255,255,.04);border:1.5px solid rgba(255,255,255,.07);border-radius:13px;padding:18px 20px;cursor:pointer;transition:all .18s;display:flex;gap:14px;align-items:flex-start}
+.appr:hover{border-color:rgba(96,165,250,.3)}
+.appr.sel{border-color:var(--blue);background:rgba(37,99,235,.12)}
+.appr-radio{width:20px;height:20px;border-radius:50%;border:1.5px solid rgba(255,255,255,.2);display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:2px}
+.appr.sel .appr-radio{border-color:var(--blue);background:var(--blue)}
+.appr-radio-dot{width:7px;height:7px;border-radius:50%;background:#fff;opacity:0;transition:opacity .15s}
+.appr.sel .appr-radio-dot{opacity:1}
+.appr-title{font-size:.9rem;font-weight:700;margin-bottom:3px}
+.appr-desc{font-size:.77rem;color:rgba(255,255,255,.42);line-height:1.45}
+
+/* CADENCE */
+.cadence-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.cad{background:rgba(255,255,255,.04);border:1.5px solid rgba(255,255,255,.07);border-radius:13px;padding:18px;cursor:pointer;transition:all .18s;text-align:center}
+.cad:hover{border-color:rgba(96,165,250,.3)}
+.cad.sel{border-color:var(--blue);background:rgba(37,99,235,.12)}
+.cad-icon{font-size:1.5rem;margin-bottom:8px}
+.cad-name{font-size:.88rem;font-weight:700;margin-bottom:3px}
+.cad-note{font-size:.73rem;color:rgba(255,255,255,.38)}
+
+/* GOALS */
+.goals-grid{display:grid;gap:8px}
+.goal{display:flex;align-items:flex-start;gap:12px;background:rgba(255,255,255,.03);border:1.5px solid rgba(255,255,255,.06);border-radius:11px;padding:14px 16px;cursor:pointer;transition:all .18s;user-select:none}
+.goal:hover{border-color:rgba(96,165,250,.3)}
+.goal.checked{border-color:rgba(37,99,235,.5);background:rgba(37,99,235,.1)}
+.goal-chk{width:20px;height:20px;border-radius:5px;border:1.5px solid rgba(255,255,255,.2);display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px}
+.goal.checked .goal-chk{background:var(--blue);border-color:var(--blue)}
+.goal-chk svg{width:11px;height:11px;fill:none;stroke:#fff;stroke-width:3;stroke-linecap:round;stroke-linejoin:round;opacity:0}
+.goal.checked .goal-chk svg{opacity:1}
+.goal-text .goal-name{font-size:.88rem;font-weight:700;margin-bottom:2px}
+.goal-text .goal-desc{font-size:.74rem;color:rgba(255,255,255,.4)}
+
+/* SUMMARY */
+.summary{background:rgba(37,99,235,.07);border:1px solid rgba(37,99,235,.2);border-radius:14px;padding:24px;margin-bottom:24px}
+.sum-title{font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:rgba(255,255,255,.35);margin-bottom:16px}
+.sum-row{display:flex;justify-content:space-between;align-items:flex-start;padding:8px 0;border-bottom:1px solid rgba(255,255,255,.05)}
+.sum-row:last-child{border-bottom:none}
+.sum-label{font-size:.8rem;color:rgba(255,255,255,.45);flex:0 0 140px}
+.sum-value{font-size:.82rem;font-weight:600;color:var(--white);text-align:right;flex:1}
+
+.confirm-note{font-size:.8rem;color:rgba(255,255,255,.3);text-align:center;margin-top:14px;line-height:1.6}
+
+/* NAV BUTTONS */
+.btn-row{display:flex;justify-content:space-between;align-items:center;margin-top:28px;gap:12px}
+.btn{padding:12px 24px;border-radius:10px;font-size:.88rem;font-weight:700;border:none;cursor:pointer;font-family:inherit;transition:all .18s}
+.btn-primary{background:var(--blue);color:#fff;box-shadow:0 4px 18px rgba(37,99,235,.25);flex:1}
+.btn-primary:hover:not(:disabled){background:#1d4ed8;transform:translateY(-1px)}
+.btn-primary:disabled{opacity:.35;cursor:not-allowed;transform:none}
+.btn-ghost{background:rgba(255,255,255,.05);color:rgba(255,255,255,.5);border:1px solid rgba(255,255,255,.08)}
+.btn-ghost:hover{background:rgba(255,255,255,.09);color:var(--white)}
+.btn-full{width:100%;padding:15px;font-size:.95rem}
+
+/* DONE */
+.done-hero{text-align:center;padding:20px 0 32px}
+.done-check{width:64px;height:64px;background:rgba(16,185,129,.12);border:2px solid rgba(16,185,129,.3);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 20px}
+.done-check svg{width:28px;height:28px;fill:none;stroke:var(--green);stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round}
+.done-hero h2{font-size:1.7rem;font-weight:800;margin-bottom:8px}
+.done-hero p{font-size:.9rem;color:rgba(255,255,255,.45);line-height:1.6;max-width:400px;margin:0 auto}
+.next-steps{margin-top:28px}
+.ns-title{font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:rgba(255,255,255,.3);margin-bottom:12px}
+.ns-item{display:flex;align-items:flex-start;gap:12px;padding:12px 0;border-bottom:1px solid rgba(255,255,255,.05)}
+.ns-item:last-child{border-bottom:none}
+.ns-num{width:24px;height:24px;border-radius:50%;background:rgba(37,99,235,.2);border:1px solid rgba(37,99,235,.3);display:flex;align-items:center;justify-content:center;font-size:.7rem;font-weight:700;color:var(--blue-light);flex-shrink:0;margin-top:1px}
+.ns-text{font-size:.82rem;color:rgba(255,255,255,.55);line-height:1.5}
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="/" class="logo">
+    <div class="logo-box"><svg viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg></div>
+    <span class="logo-text">Vet<span>INC</span></span>
+  </a>
+  <span class="nav-right">Pricing Setup</span>
+</nav>
+
+<div class="page">
+  <div class="prog">
+    <div class="prog-top">
+      <span class="prog-title" id="progTitle">Pricing Strategy</span>
+      <span class="prog-num" id="progNum">Step 1 of 5</span>
+    </div>
+    <div class="prog-track"><div class="prog-fill" id="progFill" style="width:20%"></div></div>
+  </div>
+
+  <!-- Step 1: Strategy -->
+  <div class="card show" id="s1">
+    <div class="step-tag"><svg viewBox="0 0 24 24"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>Strategy</div>
+    <h2>How aggressively do you want to grow pricing?</h2>
+    <p class="sub">Choose a quarterly target. Canadian CPI runs ~0.5–0.75%/quarter — use that as your baseline reference.</p>
+    <div class="strat-grid">
+      <div class="strat" id="strat-conservative" onclick="pickStrat('conservative')">
+        <div class="strat-icon" style="background:rgba(16,185,129,.1)">🌿</div>
+        <div class="strat-body">
+          <div class="strat-name">Conservative <span style="font-weight:400;color:rgba(255,255,255,.4);font-size:.82em">— 0.5–0.7% / quarter</span></div>
+          <div class="strat-desc">Tracks inflation. Prices stay defensible and predictable — clients barely notice. ~2–2.8% annually.</div>
+          <span class="strat-tag tag-conservative">Matches CPI</span>
+        </div>
+      </div>
+      <div class="strat" id="strat-ambitious" onclick="pickStrat('ambitious')">
+        <div class="strat-icon" style="background:rgba(37,99,235,.12)">📊</div>
+        <div class="strat-body">
+          <div class="strat-name">Ambitious <span style="font-weight:400;color:rgba(255,255,255,.4);font-size:.82em">— 0.8–1.2% / quarter</span></div>
+          <div class="strat-desc">Slightly ahead of inflation — recovers some margin without big jumps. ~3.2–4.8% annually.</div>
+          <span class="strat-tag tag-balanced">Above inflation</span>
+        </div>
+      </div>
+      <div class="strat" id="strat-aggressive" onclick="pickStrat('aggressive')">
+        <div class="strat-icon" style="background:rgba(245,158,11,.1)">📈</div>
+        <div class="strat-body">
+          <div class="strat-name">Aggressive <span style="font-weight:400;color:rgba(255,255,255,.4);font-size:.82em">— 1.5%+ / quarter</span></div>
+          <div class="strat-desc">Full margin recovery. Targets stale prices, .99 rounding, and inventory gaps. ~6%+ annually — reviewed before anything applies.</div>
+          <span class="strat-tag tag-growth">Max recovery</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="btn-row"><div></div><button class="btn btn-primary" id="next1" onclick="go(2)" disabled>Continue →</button></div>
+  </div>
+
+  <!-- Step 2: Sensitive prices -->
+  <div class="card" id="s2">
+    <div class="step-tag"><svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>Protected Prices</div>
+    <h2>Which prices would you <em style="font-style:normal;color:#fca5a5">never</em> want us to change?</h2>
+    <p class="sub">These services will always be excluded from pricing recommendations — no matter what the data says.</p>
+    <p class="sensitive-intro">Check any category that should be off-limits:</p>
+    <div class="check-grid" id="checkGrid">
+      <div class="check-item" onclick="toggleCheck(this,'euthanasia')">
+        <div class="check-box"><svg viewBox="0 0 12 9"><polyline points="1 4.5 4 7.5 11 1"/></svg></div>
+        <div class="check-text"><div class="check-name">Euthanasia &amp; end-of-life services</div></div>
+      </div>
+      <div class="check-item" onclick="toggleCheck(this,'exam')">
+        <div class="check-box"><svg viewBox="0 0 12 9"><polyline points="1 4.5 4 7.5 11 1"/></svg></div>
+        <div class="check-text"><div class="check-name">Exam &amp; consultation fees</div></div>
+      </div>
+      <div class="check-item" onclick="toggleCheck(this,'vaccines')">
+        <div class="check-box"><svg viewBox="0 0 12 9"><polyline points="1 4.5 4 7.5 11 1"/></svg></div>
+        <div class="check-text"><div class="check-name">Core vaccines</div></div>
+      </div>
+      <div class="check-item" onclick="toggleCheck(this,'wellness')">
+        <div class="check-box"><svg viewBox="0 0 12 9"><polyline points="1 4.5 4 7.5 11 1"/></svg></div>
+        <div class="check-text"><div class="check-name">Wellness &amp; preventive packages</div></div>
+      </div>
+      <div class="check-item" onclick="toggleCheck(this,'emergency')">
+        <div class="check-box"><svg viewBox="0 0 12 9"><polyline points="1 4.5 4 7.5 11 1"/></svg></div>
+        <div class="check-text"><div class="check-name">Emergency &amp; after-hours fees</div></div>
+      </div>
+      <div class="check-item" onclick="toggleCheck(this,'senior')">
+        <div class="check-box"><svg viewBox="0 0 12 9"><polyline points="1 4.5 4 7.5 11 1"/></svg></div>
+        <div class="check-text"><div class="check-name">Senior &amp; geriatric care</div></div>
+      </div>
+    </div>
+
+    <div class="btn-row">
+      <button class="btn btn-ghost" onclick="go(1)">← Back</button>
+      <button class="btn btn-primary" onclick="go(3)">Continue →</button>
+    </div>
+  </div>
+
+  <!-- Step 3: Approval flow -->
+  <div class="card" id="s3">
+    <div class="step-tag"><svg viewBox="0 0 24 24"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg>Approval</div>
+    <h2>How do you want to approve pricing changes?</h2>
+    <p class="sub">You're always in control — this sets the default workflow for recommendations.</p>
+    <div class="approval-grid">
+      <div class="appr" id="appr-all" onclick="pickAppr('all')">
+        <div class="appr-radio"><div class="appr-radio-dot"></div></div>
+        <div>
+          <div class="appr-title">I approve everything</div>
+          <div class="appr-desc">Every pricing recommendation comes to you first. Nothing changes without your explicit sign-off — even small adjustments.</div>
+        </div>
+      </div>
+      <div class="appr" id="appr-threshold" onclick="pickAppr('threshold')">
+        <div class="appr-radio"><div class="appr-radio-dot"></div></div>
+        <div>
+          <div class="appr-title">Auto-approve small changes</div>
+          <div class="appr-desc">Changes under a set threshold (e.g. &lt;2%) apply automatically. Larger changes still require your review.</div>
+        </div>
+      </div>
+      <div class="appr" id="appr-batch" onclick="pickAppr('batch')">
+        <div class="appr-radio"><div class="appr-radio-dot"></div></div>
+        <div>
+          <div class="appr-title">Monthly batch review</div>
+          <div class="appr-desc">Recommendations bundle into a monthly summary. Review once, approve in bulk, implement when ready.</div>
+        </div>
+      </div>
+    </div>
+    <div class="btn-row">
+      <button class="btn btn-ghost" onclick="go(2)">← Back</button>
+      <button class="btn btn-primary" id="next3" onclick="go(4)" disabled>Continue →</button>
+    </div>
+  </div>
+
+  <!-- Step 4: Goals -->
+  <div class="card" id="s4">
+    <div class="step-tag"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>Goals</div>
+    <h2>What matters most to you? Pick up to 3.</h2>
+    <p class="sub">Helps us prioritize which campaigns to run first and how to frame recommendations.</p>
+    <div class="goals-grid">
+      <div class="goal" onclick="toggleGoal(this,'profitability')">
+        <div class="goal-chk"><svg viewBox="0 0 12 9"><polyline points="1 4.5 4 7.5 11 1"/></svg></div>
+        <div class="goal-text"><div class="goal-name">Improve profitability</div><div class="goal-desc">Grow net margin — reduce leakage from stale prices and underpriced services</div></div>
+      </div>
+      <div class="goal" onclick="toggleGoal(this,'competitive')">
+        <div class="goal-chk"><svg viewBox="0 0 12 9"><polyline points="1 4.5 4 7.5 11 1"/></svg></div>
+        <div class="goal-text"><div class="goal-name">Stay competitive</div><div class="goal-desc">Keep prices reasonable relative to the market — not too high, not leaving money on the table</div></div>
+      </div>
+      <div class="goal" onclick="toggleGoal(this,'retention')">
+        <div class="goal-chk"><svg viewBox="0 0 12 9"><polyline points="1 4.5 4 7.5 11 1"/></svg></div>
+        <div class="goal-text"><div class="goal-name">Client retention</div><div class="goal-desc">Price changes should be gradual enough that long-term clients barely notice</div></div>
+      </div>
+      <div class="goal" onclick="toggleGoal(this,'inventory')">
+        <div class="goal-chk"><svg viewBox="0 0 12 9"><polyline points="1 4.5 4 7.5 11 1"/></svg></div>
+        <div class="goal-text"><div class="goal-name">Inventory margin protection</div><div class="goal-desc">Automatically flag when supplier cost increases eat into product margins</div></div>
+      </div>
+      <div class="goal" onclick="toggleGoal(this,'simplicity')">
+        <div class="goal-chk"><svg viewBox="0 0 12 9"><polyline points="1 4.5 4 7.5 11 1"/></svg></div>
+        <div class="goal-text"><div class="goal-name">Simple, predictable pricing</div><div class="goal-desc">Clean .99 price points, consistent structure — easy for staff to remember and quote</div></div>
+      </div>
+    </div>
+    <div class="btn-row">
+      <button class="btn btn-ghost" onclick="go(3)">← Back</button>
+      <button class="btn btn-primary" id="next4" onclick="go(5)" disabled>Continue →</button>
+    </div>
+  </div>
+
+  <!-- Step 5: Confirm -->
+  <div class="card" id="s5">
+    <div class="step-tag"><svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>Confirm</div>
+    <h2>Your pricing setup</h2>
+    <p class="sub">Review before we lock in your configuration. You can change any of this after onboarding.</p>
+
+    <div class="summary">
+      <div class="sum-title">Configuration summary</div>
+      <div class="sum-row"><span class="sum-label">Strategy</span><span class="sum-value" id="sumStrat">—</span></div>
+      <div class="sum-row"><span class="sum-label">Protected prices</span><span class="sum-value" id="sumProtected">—</span></div>
+      <div class="sum-row"><span class="sum-label">Approval flow</span><span class="sum-value" id="sumAppr">—</span></div>
+      <div class="sum-row"><span class="sum-label">Primary goals</span><span class="sum-value" id="sumGoals">—</span></div>
+    </div>
+
+    <button class="btn btn-primary btn-full" onclick="finish()">Confirm Setup →</button>
+    <p class="confirm-note">This saves your preferences to your Vet INC account.<br>Your first report will run within 24 hours.</p>
+    <div class="btn-row" style="margin-top:16px">
+      <button class="btn btn-ghost" onclick="go(4)" style="width:100%">← Edit something</button>
+    </div>
+  </div>
+
+  <!-- Done -->
+  <div class="card" id="sdone">
+    <div class="done-hero">
+      <div class="done-check"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div>
+      <h2>You're all set.</h2>
+      <p>Your pricing philosophy has been saved. We'll run your first analysis and have a report ready for your review within 24 hours.</p>
+    </div>
+    <div class="next-steps">
+      <div class="ns-title">What happens next</div>
+      <div class="ns-item"><div class="ns-num">1</div><div class="ns-text">We pull your pricing history from your PMS and run the analysis against your settings</div></div>
+      <div class="ns-item"><div class="ns-num">2</div><div class="ns-text">You'll receive a report showing specific services flagged for review — nothing changes yet</div></div>
+      <div class="ns-item"><div class="ns-num">3</div><div class="ns-text">You review and approve — then we update your price list, with every change logged and reversible</div></div>
+    </div>
+  </div>
+</div>
+
+<script>
+const state = {strategy:null,customRate:null,customPeriod:'quarter',protected:new Set(),customProtected:[],approval:null,goals:new Set()};
+
+const STEP_META = {
+  1:{title:'Pricing Strategy',label:'Step 1 of 5',pct:20},
+  2:{title:'Protected Prices',label:'Step 2 of 5',pct:40},
+  3:{title:'Approval Flow',label:'Step 3 of 5',pct:60},
+  4:{title:'Goals',label:'Step 4 of 5',pct:80},
+  5:{title:'Confirm',label:'Step 5 of 5',pct:100},
+};
+
+function go(n){
+  document.querySelectorAll('.card').forEach(c=>c.classList.remove('show'));
+  const id = n === 'done' ? 'sdone' : 's'+n;
+  document.getElementById(id).classList.add('show');
+  if(n !== 'done'){
+    const m = STEP_META[n];
+    document.getElementById('progTitle').textContent = m.title;
+    document.getElementById('progNum').textContent = m.label;
+    document.getElementById('progFill').style.width = m.pct+'%';
+  }
+  window.scrollTo({top:0,behavior:'smooth'});
+  if(n === 5) buildSummary();
+}
+
+function pickStrat(v){
+  state.strategy = v;
+  document.querySelectorAll('.strat').forEach(s=>s.classList.remove('sel'));
+  document.getElementById('strat-'+v).classList.add('sel');
+  document.getElementById('customRate').classList.toggle('visible', v==='custom');
+  document.getElementById('next1').disabled = false;
+}
+
+function pickPeriod(v){
+  state.customPeriod = v;
+  document.querySelectorAll('.rate-period').forEach(p=>p.classList.remove('sel'));
+  document.getElementById('rp-'+v).classList.add('sel');
+}
+
+function toggleCheck(el, key){
+  el.classList.toggle('checked');
+  if(el.classList.contains('checked')) state.protected.add(key);
+  else state.protected.delete(key);
+}
+
+function addCustom(){
+  const inp = document.getElementById('addInput');
+  const val = inp.value.trim();
+  if(!val) return;
+  state.customProtected.push(val);
+  renderCustomTags();
+  inp.value = '';
+}
+
+function removeCustom(idx){
+  state.customProtected.splice(idx,1);
+  renderCustomTags();
+}
+
+function renderCustomTags(){
+  const wrap = document.getElementById('customTags');
+  wrap.innerHTML = state.customProtected.map((t,i)=>
+    `<div class="ctag">${t}<button onclick="removeCustom(${i})">×</button></div>`
+  ).join('');
+}
+
+function pickAppr(v){
+  state.approval = v;
+  document.querySelectorAll('.appr').forEach(a=>a.classList.remove('sel'));
+  document.getElementById('appr-'+v).classList.add('sel');
+  document.getElementById('next3').disabled = false;
+}
+
+function toggleGoal(el, key){
+  const on = !el.classList.contains('checked');
+  if(on && state.goals.size >= 3){
+    el.classList.add('shake');
+    setTimeout(()=>el.classList.remove('shake'),400);
+    return;
+  }
+  el.classList.toggle('checked', on);
+  if(on) state.goals.add(key); else state.goals.delete(key);
+  document.getElementById('next4').disabled = state.goals.size === 0;
+}
+
+const STRAT_LABELS = {
+  conservative:'Conservative (0.5–0.7% / quarter)',
+  ambitious:'Ambitious (0.8–1.2% / quarter)',
+  aggressive:'Aggressive (1.5%+ / quarter)',
+  custom:'Custom rate',
+};
+const APPR_LABELS = {
+  all:'Approve everything',
+  threshold:'Auto-approve small changes',
+  batch:'Monthly batch review',
+};
+const PROTECTED_LABELS = {
+  euthanasia:'Euthanasia',exam:'Exam fees',vaccines:'Vaccines',
+  wellness:'Wellness packages',emergency:'Emergency fees',senior:'Senior care',
+};
+const GOAL_LABELS = {
+  profitability:'Profitability',competitive:'Stay competitive',
+  retention:'Client retention',inventory:'Inventory margins',simplicity:'Simple pricing',
+};
+
+function buildSummary(){
+  let stratText = STRAT_LABELS[state.strategy] || '—';
+  if(state.strategy === 'custom'){
+    const r = document.getElementById('rateVal').value || '0.8';
+    stratText += ` — ${r}% per ${state.customPeriod}`;
+  }
+
+  const allProt = [...state.protected].map(k=>PROTECTED_LABELS[k]||k);
+  allProt.push(...state.customProtected);
+
+  document.getElementById('sumStrat').textContent = stratText;
+  document.getElementById('sumProtected').textContent = allProt.length ? allProt.join(', ') : 'None selected';
+  document.getElementById('sumAppr').textContent = APPR_LABELS[state.approval] || '—';
+  document.getElementById('sumGoals').textContent = [...state.goals].map(k=>GOAL_LABELS[k]||k).join(', ') || '—';
+}
+
+function finish(){
+  const payload = {
+    strategy: state.strategy,
+    customRate: state.strategy==='custom' ? {rate:parseFloat(document.getElementById('rateVal').value),period:state.customPeriod} : null,
+    protected: [...state.protected],
+    customProtected: state.customProtected,
+    approval: state.approval,
+    goals: [...state.goals],
+    submittedAt: new Date().toISOString(),
+  };
+  console.log('Pricing setup submitted:', payload);
+  // TODO: POST to Supabase or webhook
+  go('done');
+}
+</script>
+</body>
+</html>

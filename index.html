@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Vet INC — Pricing made simple for veterinary clinics</title>
+<meta name="description" content="Vet INC brings your fee schedule into one fast, clean dashboard. Make pricing changes in minutes — not weeks."/>
+<link rel="icon" type="image/png" href="logo.png"/>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet"/>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+
+:root{
+  --bg:#fff;--bg2:#f8fafc;--bg3:#f1f5f9;
+  --line:#e2e8f0;--line2:#cbd5e1;
+  --blue:#2563eb;--blue2:#3b82f6;--blue-bg:#eff6ff;
+  --green:#16a34a;--green-bg:#f0fdf4;
+  --ink:#0f172a;--ink2:#334155;--dim:#64748b;--dimmer:#94a3b8;
+}
+html{scroll-behavior:smooth}
+body{font-family:'Inter',system-ui,sans-serif;background:var(--bg);color:var(--ink);-webkit-font-smoothing:antialiased;overflow-x:hidden}
+
+/* NAV */
+.nav-wrap{position:fixed;top:0;left:0;right:0;z-index:99;background:rgba(255,255,255,.9);backdrop-filter:blur(16px);border-bottom:1px solid var(--line)}
+nav{max-width:1040px;margin:0 auto;height:100px;padding:0 24px;display:flex;align-items:center;justify-content:space-between}
+.logo{display:flex;align-items:center;gap:8px;text-decoration:none}
+.logo img{height:88px;width:auto}
+.logo-text{display:none}
+.nav-r{display:flex;align-items:center;gap:4px}
+.nav-r a{font-size:.85rem;font-weight:500;color:var(--dim);text-decoration:none;padding:7px 12px;border-radius:7px;transition:.15s}
+.nav-r a:hover{color:var(--ink);background:var(--bg3)}
+.nav-cta{background:var(--ink)!important;color:#fff!important;font-weight:600!important;padding:8px 16px!important;border-radius:7px!important}
+.nav-cta:hover{background:var(--blue)!important}
+@media(max-width:700px){.nav-r a:not(.nav-cta){display:none}}
+
+/* HERO */
+.hero-shell{position:relative;overflow:hidden}
+.hero-shell::before{content:'';position:absolute;top:-20%;right:-5%;width:600px;height:500px;background:radial-gradient(ellipse,rgba(37,99,235,.05) 0%,transparent 60%);pointer-events:none}
+.hero{padding:170px 24px 40px;max-width:820px;margin:0 auto;text-align:center;position:relative}
+.hero-tag{display:inline-flex;align-items:center;gap:7px;font-size:.75rem;font-weight:600;color:var(--blue);background:var(--blue-bg);padding:5px 13px;border-radius:20px;margin-bottom:24px;border:1px solid #dbeafe}
+.hero-tag::before{content:'';width:5px;height:5px;border-radius:50%;background:var(--blue)}
+.hero-h{font-size:clamp(2rem,4.5vw,3.2rem);font-weight:800;line-height:1.1;letter-spacing:-1.3px;margin-bottom:18px}
+.hero-h span{color:var(--blue)}
+.hero-p{font-size:1.05rem;color:var(--dim);line-height:1.65;margin-bottom:32px;max-width:540px;margin-left:auto;margin-right:auto}
+.hero-btns{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-bottom:24px}
+.btn{display:inline-flex;align-items:center;padding:12px 24px;border-radius:9px;font-size:.9rem;font-weight:600;text-decoration:none;font-family:inherit;cursor:pointer;border:none;transition:.2s}
+.btn-p{background:var(--ink);color:#fff}
+.btn-p:hover{background:var(--blue);transform:translateY(-1px)}
+.btn-s{background:var(--bg);color:var(--ink2);border:1px solid var(--line2)}
+.btn-s:hover{background:var(--bg3)}
+.hero-fine{display:flex;gap:24px;justify-content:center;flex-wrap:wrap}
+.hero-fine span{font-size:.78rem;color:var(--dimmer);display:flex;align-items:center;gap:5px}
+.hero-fine span::before{content:'✓';color:var(--blue);font-weight:700}
+
+/* ═══ DEVICE SHOWCASE ═══ */
+.showcase{
+  max-width:900px;margin:0 auto;padding:20px 24px 90px;
+  display:flex;align-items:center;justify-content:center;
+  position:relative;
+}
+.hero-device-img{
+  width:100%;max-width:400px;height:auto;
+  display:block;margin:0 auto;
+  filter:drop-shadow(0 20px 40px rgba(0,0,0,.10));
+}
+
+/* SECTIONS */
+.section{padding:88px 24px}
+.section-inner{max-width:1040px;margin:0 auto}
+.sec-label{font-size:.75rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--blue);display:block;margin-bottom:12px}
+.sec-h{font-size:clamp(1.6rem,3.2vw,2.2rem);font-weight:800;letter-spacing:-.8px;line-height:1.15;margin-bottom:14px}
+.sec-h span{color:var(--blue)}
+.sec-p{font-size:.98rem;color:var(--dim);line-height:1.65;max-width:520px}
+
+.alt-bg{background:var(--bg2);border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+.cols{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:40px}
+@media(max-width:700px){.cols{grid-template-columns:1fr}}
+.col{background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:24px}
+.col-num{font-size:1.7rem;font-weight:800;color:var(--blue);letter-spacing:-.5px;margin-bottom:4px}
+.col-title{font-size:.88rem;font-weight:700;margin-bottom:5px}
+.col-desc{font-size:.82rem;color:var(--dim);line-height:1.55}
+
+.flow{display:flex;flex-direction:column;margin-top:40px}
+.flow-step{display:grid;grid-template-columns:48px 1fr;gap:20px;padding:24px 0;border-bottom:1px solid var(--line)}
+.flow-step:last-child{border:none}
+.flow-n{width:36px;height:36px;border-radius:50%;background:var(--blue-bg);color:var(--blue);display:flex;align-items:center;justify-content:center;font-size:.82rem;font-weight:800;border:2px solid #dbeafe}
+.flow-title{font-size:.92rem;font-weight:700;margin-bottom:4px}
+.flow-desc{font-size:.85rem;color:var(--dim);line-height:1.55}
+
+.pricing-card{background:var(--bg);border:1px solid var(--line);border-radius:14px;padding:44px 36px;margin-top:36px;max-width:460px;margin-left:auto;margin-right:auto;box-shadow:0 1px 3px rgba(0,0,0,.02),0 10px 30px rgba(0,0,0,.03);text-align:center}
+.price-amt{font-size:2.8rem;font-weight:800;letter-spacing:-1.5px}
+.price-amt span{font-size:1rem;font-weight:600;color:var(--dim)}
+.price-per{font-size:.82rem;color:var(--dim);margin-bottom:24px}
+.price-features{list-style:none;text-align:left;margin-bottom:28px;max-width:320px;margin-left:auto;margin-right:auto}
+.price-features li{font-size:.88rem;color:var(--ink2);padding:9px 0;border-bottom:1px solid var(--line);display:flex;align-items:flex-start;gap:9px}
+.price-features li:last-child{border:none}
+.price-features li::before{content:'✓';color:var(--blue);font-weight:700;flex-shrink:0}
+.price-cta{width:100%;justify-content:center}
+
+.cta-dark{background:var(--ink);padding:72px 24px;text-align:center}
+.cta-inner{max-width:520px;margin:0 auto}
+.cta-h{font-size:clamp(1.6rem,3.5vw,2.2rem);font-weight:800;letter-spacing:-.8px;line-height:1.1;margin-bottom:14px;color:#fff}
+.cta-h span{color:var(--blue2)}
+.cta-p{font-size:.92rem;color:rgba(255,255,255,.55);line-height:1.6;margin-bottom:24px}
+.cta-dark .btn-p{background:var(--blue)}
+.cta-dark .btn-p:hover{background:var(--blue2)}
+.cta-fine{font-size:.74rem;color:rgba(255,255,255,.3);margin-top:14px}
+
+footer{border-top:1px solid var(--line);padding:24px}
+.footer-inner{max-width:1040px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px}
+.f-left{display:flex;align-items:center;gap:10px}
+.f-logo img{height:22px;width:auto;opacity:.4}
+.f-copy{font-size:.74rem;color:var(--dimmer)}
+.f-links{display:flex;gap:18px}
+.f-links a{font-size:.74rem;color:var(--dimmer);text-decoration:none}
+.f-links a:hover{color:var(--ink)}
+
+/* APP SECTION */
+.app-wrap{display:flex;flex-direction:column;align-items:center;text-align:center;max-width:600px;margin:0 auto}
+.app-icon-wrap{margin-bottom:32px}
+.app-icon{width:200px;height:200px;background:#fff;border-radius:44px;box-shadow:0 8px 40px rgba(0,0,0,.13),0 0 0 1px rgba(0,0,0,.06);display:flex;align-items:center;justify-content:center;padding:24px}
+.app-icon img{width:100%;height:100%;object-fit:contain}
+.app-icon-label{display:none}
+.app-wrap .sec-p{margin:0 auto}
+.app-badges{display:flex;gap:12px;margin-top:28px;flex-wrap:wrap;justify-content:center}
+.badge-wrap{display:flex;flex-direction:column;align-items:center;gap:6px}
+.app-badge{display:inline-flex;align-items:center;gap:11px;padding:11px 18px;border-radius:10px;text-decoration:none;transition:.2s;min-width:150px;cursor:default;opacity:.7}
+.app-badge-apple{background:#000;color:#fff}
+.app-badge-google{background:#000;color:#fff}
+.badge-icon{width:20px;height:20px;flex-shrink:0}
+.badge-text{display:flex;flex-direction:column}
+.badge-sub{font-size:.62rem;font-weight:500;opacity:.8;line-height:1}
+.badge-main{font-size:.95rem;font-weight:700;line-height:1.2;letter-spacing:-.2px}
+.badge-soon{font-size:.72rem;font-weight:600;color:var(--blue);background:var(--blue-bg);padding:3px 9px;border-radius:20px;border:1px solid #dbeafe}
+
+.r{opacity:0;transform:translateY(10px);transition:.4s ease}
+.r.on{opacity:1;transform:none}
+@media(max-width:600px){.hero{padding:140px 20px 32px}.section{padding:64px 20px}}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<div class="nav-wrap">
+<nav>
+  <a class="logo" href="#"><img src="logo.png" alt="Vet INC" onerror="this.style.display='none'"/><span class="logo-text">Vet INC</span></a>
+  <div class="nav-r">
+    <a href="#problem">Problem</a>
+    <a href="#how">How it works</a>
+    <a href="#pricing">Pricing</a>
+    <a href="mailto:jack@vetinc.ca?subject=Free%20fee%20schedule%20analysis" class="btn btn-s">Book free analysis</a>
+  </div>
+</nav>
+</div>
+
+<!-- HERO -->
+<div class="hero-shell">
+  <div class="hero">
+    <div class="r">
+      <span class="hero-tag">Fee schedule management for vet clinics</span>
+      <h1 class="hero-h">Pricing changes <span>in minutes,</span> not weeks.</h1>
+      <p class="hero-p">Vet INC connects directly to your PMS, pulls your fee schedule data, and recommends what to change. You approve with a click — and we push the updates back in for you.</p>
+      <div class="hero-btns">
+        <a href="schedule.html" class="btn btn-p">Book a free analysis</a>
+        <a href="#how" class="btn btn-s">See how it works</a>
+      </div>
+      <div class="hero-fine">
+        <span>No setup fee</span>
+        <span>Direct PMS integration</span>
+        <span>Cancel anytime</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- DEVICE SHOWCASE -->
+  <div class="showcase r">
+    <img src="laptop-device-transparent.png" alt="Vet INC dashboard on MacBook and iPhone" class="hero-device-img"/>
+  </div>
+</div>
+
+<!-- PROBLEM -->
+<div class="section alt-bg r" id="problem">
+  <div class="section-inner">
+    <span class="sec-label">The problem</span>
+    <h2 class="sec-h">Updating your fee schedule is a <span>pain.</span></h2>
+    <p class="sec-p">So most clinics don't do it. Then costs creep up, pricing falls behind, and someone eventually panics and raises everything 10% at once. There's a better way.</p>
+    <div class="cols">
+      <div class="col"><div class="col-num">847</div><div class="col-title">Days since last review</div><p class="col-desc">The average clinic hasn't touched their fee schedule in over two years.</p></div>
+      <div class="col"><div class="col-num">60%</div><div class="col-title">Codes underpriced</div><p class="col-desc">More than half of service codes are below where they should be.</p></div>
+      <div class="col"><div class="col-num">$40K+</div><div class="col-title">Lost per year</div><p class="col-desc">Revenue quietly drained by pricing that never kept up with costs.</p></div>
+    </div>
+  </div>
+</div>
+
+<!-- HOW IT WORKS -->
+<div class="section r" id="how">
+  <div class="section-inner">
+    <span class="sec-label">How it works</span>
+    <h2 class="sec-h">We connect. We recommend. <span>We update.</span></h2>
+    <p class="sec-p">No spreadsheets. No uploading. No guesswork. Vet INC connects directly to your PMS, pulls your data, recommends the right changes, and makes them — so you never have to.</p>
+    <div class="flow">
+      <div class="flow-step"><div class="flow-n">1</div><div><div class="flow-title">We connect to your PMS</div><p class="flow-desc">Vet INC integrates directly with AVImark, Cornerstone, and other major practice management systems. No exports, no uploads — we pull your data automatically.</p></div></div>
+      <div class="flow-step"><div class="flow-n">2</div><div><div class="flow-title">We recommend the right changes</div><p class="flow-desc">On your schedule — quarterly, monthly, whatever works. We flag codes that have drifted, show you the recommended price, and explain the reasoning.</p></div></div>
+      <div class="flow-step"><div class="flow-n">3</div><div><div class="flow-title">You approve with one click</div><p class="flow-desc">Review the recommendations in your dashboard. Approve what looks right, reject what doesn't. The whole review takes minutes.</p></div></div>
+      <div class="flow-step"><div class="flow-n">4</div><div><div class="flow-title">We push the changes to your PMS</div><p class="flow-desc">Approved changes go straight back into your practice management system — no manual entry. Then we monitor revenue and visit volume to make sure everything landed right.</p></div></div>
+    </div>
+  </div>
+</div>
+
+<!-- APP -->
+<div class="section r" id="app">
+  <div class="section-inner">
+    <div class="app-wrap">
+      <div class="app-icon-wrap">
+        <div class="app-icon">
+          <img src="logo.png" alt="Vet INC App"/>
+        </div>
+      </div>
+      <span class="sec-label">Mobile app</span>
+      <h2 class="sec-h">Your fee schedule, <span>in your pocket.</span></h2>
+      <p class="sec-p">The Vet INC app puts approvals, alerts, and revenue monitoring right on your phone. Get notified when something needs your attention — and approve or reject changes in seconds, from anywhere.</p>
+      <div class="app-badges">
+        <div class="badge-wrap">
+          <a class="app-badge app-badge-apple" href="#app" onclick="return false;" aria-label="Download on the App Store">
+            <svg class="badge-icon" viewBox="0 0 22 26" fill="white"><path d="M18.07 13.77c-.03-3.16 2.58-4.68 2.7-4.76-1.47-2.15-3.76-2.45-4.58-2.48-1.96-.2-3.82 1.15-4.82 1.15-1 0-2.55-1.12-4.2-1.09-2.16.03-4.16 1.26-5.27 3.19-2.24 3.9-.58 9.67 1.61 12.84 1.07 1.54 2.34 3.27 4.01 3.21 1.61-.07 2.22-1.04 4.17-1.04 1.94 0 2.49 1.04 4.18 1.01 1.73-.03 2.82-1.56 3.88-3.11.22-.32.42-.65.6-.99-3.54-1.37-4.25-5.9-4.28-5.93zM14.9 4.37C15.8 3.28 16.4 1.77 16.22.24c-1.32.06-2.94.9-3.87 1.97-.84.96-1.58 2.5-1.38 3.98 1.47.11 2.97-.74 3.93-1.82z"/></svg>
+            <div class="badge-text">
+              <span class="badge-sub">Download on the</span>
+              <span class="badge-main">App Store</span>
+            </div>
+          </a>
+          <span class="badge-soon">Coming soon</span>
+        </div>
+        <div class="badge-wrap">
+          <a class="app-badge app-badge-google" href="#app" onclick="return false;" aria-label="Get it on Google Play">
+            <svg class="badge-icon" viewBox="0 0 24 24" fill="none"><path d="M3.18 1.07 13.6 12 3.18 22.93A2 2 0 0 1 2 21V3a2 2 0 0 1 1.18-1.93z" fill="#EA4335"/><path d="M20.82 10.27 17.6 8.4 13.6 12l4 3.6 3.22-1.87A2 2 0 0 0 22 12a2 2 0 0 0-1.18-1.73z" fill="#FBBC04"/><path d="M3.18 1.07 13.6 12l4-3.6-11.07-6.4a2 2 0 0 0-3.35-0.93z" fill="#4285F4"/><path d="M3.18 22.93a2 2 0 0 0 3.35-.93L17.6 15.6l-4-3.6-10.42 10.93z" fill="#34A853"/></svg>
+            <div class="badge-text">
+              <span class="badge-sub">Get it on</span>
+              <span class="badge-main">Google Play</span>
+            </div>
+          </a>
+          <span class="badge-soon">Coming soon</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- PRICING -->
+<div class="section alt-bg r" id="pricing">
+  <div class="section-inner">
+    <span class="sec-label">Pricing</span>
+    <h2 class="sec-h">One price. Everything <span>included.</span></h2>
+    <div class="pricing-card">
+      <div class="price-amt">$99<span>/mo</span></div>
+      <div class="price-per">per location — cancel anytime</div>
+      <ul class="price-features">
+        <li>Full fee schedule dashboard</li>
+        <li>Change suggestions on your schedule</li>
+        <li>One-click approve or reject</li>
+        <li>Revenue &amp; visit monitoring after changes</li>
+        <li>Quarterly, monthly, or weekly cadence</li>
+        <li>Direct PMS integration — AVImark &amp; Cornerstone</li>
+        <li>No contract — cancel anytime</li>
+      </ul>
+      <a href="schedule.html" class="btn btn-p price-cta">Book a free analysis</a>
+    </div>
+  </div>
+</div>
+
+<!-- CTA -->
+<div class="cta-dark r">
+  <div class="cta-inner">
+    <h2 class="cta-h">Pricing changes <span>in minutes.</span></h2>
+    <p class="cta-p">We'll show you what we'd change on your fee schedule — before you pay anything.</p>
+    <a href="schedule.html" class="btn btn-p">Book a free analysis</a>
+    <p class="cta-fine">jack@vetinc.ca &nbsp;·&nbsp; AVImark &amp; Cornerstone</p>
+  </div>
+</div>
+
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-inner">
+    <div class="f-left"><div class="f-logo"><img src="logo.png" alt="Vet INC"/></div><span class="f-copy">© 2026 Vet INC</span></div>
+    <div class="f-links"><a href="mailto:jack@vetinc.ca">Contact</a></div>
+  </div>
+</footer>
+
+<script>
+const io=new IntersectionObserver(e=>e.forEach(x=>{if(x.isIntersecting){x.target.classList.add('on');io.unobserve(x.target)}}),{threshold:.07});
+document.querySelectorAll('.r').forEach(el=>io.observe(el));
+document.querySelectorAll('a[href^="#"]').forEach(a=>a.addEventListener('click',e=>{const t=document.querySelector(a.getAttribute('href'));if(t){e.preventDefault();t.scrollIntoView({behavior:'smooth'})}}));
+</script>
+</body>
+</html>

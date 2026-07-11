@@ -1,0 +1,506 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Vet INC — Clinic Revenue Assessment</title>
+<meta name="description" content="Find out how much revenue your clinic is leaving on the table — free 2-minute assessment."/>
+<script>if(location.protocol==='http:'&&location.hostname!=='localhost')location.replace('https://'+location.hostname+location.pathname+location.search+location.hash)</script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{--blue:#2563eb;--blue-dark:#1e3a5f;--blue-light:#60a5fa;--navy:#0f172a;--surface:#f0f4ff;--border:#dbeafe;--muted:#64748b;--white:#fff;--green:#10b981;--amber:#f59e0b}
+body{background:var(--navy);color:var(--white);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-serif;-webkit-font-smoothing:antialiased;min-height:100vh}
+
+/* NAV */
+nav{position:fixed;top:0;left:0;right:0;z-index:100;padding:0 40px;height:60px;display:flex;align-items:center;justify-content:space-between;background:rgba(15,23,42,.92);backdrop-filter:blur(12px);border-bottom:1px solid rgba(255,255,255,.06)}
+.logo{display:flex;align-items:center;gap:10px;text-decoration:none}
+.logo-box{width:34px;height:34px;background:var(--blue);border-radius:9px;display:flex;align-items:center;justify-content:center}
+.logo-box svg{width:18px;height:18px;fill:none;stroke:#fff;stroke-width:2.5;stroke-linecap:round}
+.logo-text{font-size:1.05rem;font-weight:800;color:var(--white)}.logo-text span{color:var(--blue-light)}
+.nav-back{color:rgba(255,255,255,.5);font-size:.82rem;font-weight:600;text-decoration:none;padding:7px 14px;border-radius:8px;transition:all .15s}
+.nav-back:hover{background:rgba(255,255,255,.06);color:var(--white)}
+
+/* LAYOUT */
+.wrapper{padding:100px 24px 60px;max-width:640px;margin:0 auto}
+
+/* PROGRESS */
+.progress-wrap{margin-bottom:40px}
+.progress-label{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
+.progress-step{font-size:.75rem;font-weight:700;color:var(--blue-light);letter-spacing:.06em;text-transform:uppercase}
+.progress-count{font-size:.75rem;color:rgba(255,255,255,.4)}
+.progress-bar{height:3px;background:rgba(255,255,255,.1);border-radius:99px;overflow:hidden}
+.progress-fill{height:100%;background:var(--blue);border-radius:99px;transition:width .4s ease}
+
+/* QUESTION CARD */
+.card{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:20px;padding:40px;display:none}
+.card.active{display:block;animation:fadeUp .3s ease}
+@keyframes fadeUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+
+.card-badge{display:inline-block;background:rgba(37,99,235,.2);border:1px solid rgba(96,165,250,.2);color:var(--blue-light);border-radius:12px;padding:4px 12px;font-size:.68rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;margin-bottom:20px}
+.card h2{font-size:1.6rem;font-weight:800;line-height:1.25;margin-bottom:10px;color:var(--white)}
+.card p.sub{font-size:.9rem;color:rgba(255,255,255,.5);line-height:1.6;margin-bottom:28px}
+
+/* OPTIONS GRID */
+.options{display:grid;gap:10px}
+.options.two-col{grid-template-columns:1fr 1fr}
+.option{background:rgba(255,255,255,.04);border:1.5px solid rgba(255,255,255,.08);border-radius:12px;padding:16px 20px;cursor:pointer;transition:all .2s;display:flex;align-items:flex-start;gap:14px}
+.option:hover{border-color:rgba(96,165,250,.4);background:rgba(37,99,235,.08)}
+.option.selected{border-color:var(--blue);background:rgba(37,99,235,.15)}
+.option-icon{width:38px;height:38px;border-radius:10px;background:rgba(255,255,255,.06);display:flex;align-items:center;justify-content:center;font-size:1.1rem;flex-shrink:0}
+.option-body{}
+.option-label{font-size:.92rem;font-weight:700;color:var(--white);margin-bottom:2px}
+.option-desc{font-size:.78rem;color:rgba(255,255,255,.45);line-height:1.4}
+
+/* SLIDER */
+.slider-wrap{margin-bottom:8px}
+input[type=range]{width:100%;-webkit-appearance:none;height:4px;border-radius:99px;background:rgba(255,255,255,.12);outline:none;cursor:pointer}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:22px;height:22px;border-radius:50%;background:var(--blue);box-shadow:0 0 0 3px rgba(37,99,235,.3);cursor:pointer}
+.slider-labels{display:flex;justify-content:space-between;font-size:.72rem;color:rgba(255,255,255,.35);margin-top:8px}
+.slider-value{text-align:center;font-size:1.8rem;font-weight:800;color:var(--white);margin-bottom:6px}
+.slider-value span{font-size:1rem;color:var(--blue-light);font-weight:600}
+
+/* TEXT INPUT */
+.text-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px}
+.field label{display:block;font-size:.75rem;font-weight:700;color:rgba(255,255,255,.45);letter-spacing:.05em;text-transform:uppercase;margin-bottom:8px}
+.field input{width:100%;background:rgba(255,255,255,.05);border:1.5px solid rgba(255,255,255,.1);border-radius:10px;padding:12px 16px;font-size:.92rem;color:var(--white);font-family:inherit;outline:none;transition:border-color .2s}
+.field input::placeholder{color:rgba(255,255,255,.25)}
+.field input:focus{border-color:var(--blue)}
+.field.full{grid-column:1/-1}
+
+/* NAV BUTTONS */
+.btn-row{display:flex;justify-content:space-between;align-items:center;margin-top:32px}
+.btn{padding:13px 28px;border-radius:10px;font-size:.9rem;font-weight:700;border:none;cursor:pointer;font-family:inherit;transition:all .2s}
+.btn-primary{background:var(--blue);color:#fff;box-shadow:0 4px 20px rgba(37,99,235,.3)}
+.btn-primary:hover{background:#1d4ed8;transform:translateY(-1px)}
+.btn-primary:disabled{opacity:.4;cursor:not-allowed;transform:none}
+.btn-ghost{background:rgba(255,255,255,.06);color:rgba(255,255,255,.6);border:1px solid rgba(255,255,255,.1)}
+.btn-ghost:hover{background:rgba(255,255,255,.1);color:var(--white)}
+.btn-lg{padding:16px 36px;font-size:1rem;width:100%}
+
+/* RESULTS */
+.result-hero{text-align:center;padding:20px 0 36px}
+.result-amount{font-size:3.8rem;font-weight:900;color:var(--green);line-height:1;margin-bottom:6px}
+.result-amount small{font-size:1.4rem;color:rgba(255,255,255,.4)}
+.result-label{font-size:.85rem;color:rgba(255,255,255,.5);margin-bottom:4px}
+.result-note{font-size:.78rem;color:rgba(255,255,255,.3);margin-top:8px}
+
+.plan-cards{display:grid;gap:12px;margin:28px 0}
+.plan-card{background:rgba(255,255,255,.04);border:1.5px solid rgba(255,255,255,.08);border-radius:14px;padding:22px 24px;position:relative;cursor:pointer;transition:all .2s}
+.plan-card:hover{border-color:rgba(96,165,250,.3)}
+.plan-card.recommended{border-color:var(--blue);background:rgba(37,99,235,.1)}
+.plan-card .rec-badge{position:absolute;top:-10px;left:20px;background:var(--blue);color:#fff;font-size:.65rem;font-weight:800;padding:3px 10px;border-radius:20px;letter-spacing:.06em;text-transform:uppercase}
+.plan-name{font-size:1rem;font-weight:800;color:var(--white);margin-bottom:4px}
+.plan-price{font-size:1.5rem;font-weight:900;color:var(--blue-light);margin-bottom:6px}
+.plan-price small{font-size:.8rem;color:rgba(255,255,255,.4);font-weight:400}
+.plan-features{list-style:none;margin-top:10px}
+.plan-features li{font-size:.8rem;color:rgba(255,255,255,.5);padding:3px 0;display:flex;gap:8px}
+.plan-features li::before{content:'✓';color:var(--green);font-weight:700;flex-shrink:0}
+
+.breakdown{background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.06);border-radius:12px;padding:20px;margin:20px 0}
+.breakdown-title{font-size:.72rem;font-weight:700;color:rgba(255,255,255,.4);text-transform:uppercase;letter-spacing:.08em;margin-bottom:14px}
+.breakdown-row{display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid rgba(255,255,255,.05)}
+.breakdown-row:last-child{border-bottom:none;padding-top:12px;margin-top:4px}
+.breakdown-row.total{font-weight:800;color:var(--white)}
+.breakdown-label{font-size:.82rem;color:rgba(255,255,255,.55)}
+.breakdown-value{font-size:.88rem;font-weight:700;color:var(--white)}
+.breakdown-value.green{color:var(--green)}
+
+.cta-section{text-align:center;padding:8px 0}
+.cta-section p{font-size:.85rem;color:rgba(255,255,255,.4);margin-bottom:16px}
+
+/* UTILITY */
+.hidden{display:none}
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="/" class="logo">
+    <div class="logo-box">
+      <svg viewBox="0 0 24 24"><path d="M3 3h18v18H3z"/><path d="M8 12h8M12 8v8"/></svg>
+    </div>
+    <span class="logo-text">Vet<span>INC</span></span>
+  </a>
+  <a href="/" class="nav-back">← Back</a>
+</nav>
+
+<div class="wrapper">
+  <div class="progress-wrap">
+    <div class="progress-label">
+      <span class="progress-step" id="stepLabel">Clinic Profile</span>
+      <span class="progress-count" id="stepCount">1 of 6</span>
+    </div>
+    <div class="progress-bar"><div class="progress-fill" id="progressFill" style="width:16%"></div></div>
+  </div>
+
+  <!-- Step 1: PMS -->
+  <div class="card active" id="step-1">
+    <div class="card-badge">Step 1</div>
+    <h2>What practice management software do you use?</h2>
+    <p class="sub">This determines how we connect and what data we can pull.</p>
+    <div class="options">
+      <div class="option" onclick="selectOption(this,'pms','avimark')">
+        <div class="option-icon">🖥️</div>
+        <div class="option-body"><div class="option-label">AVImark</div><div class="option-desc">Most common in Canada — full integration available</div></div>
+      </div>
+      <div class="option" onclick="selectOption(this,'pms','cornerstone')">
+        <div class="option-icon">🔷</div>
+        <div class="option-body"><div class="option-label">Cornerstone</div><div class="option-desc">IDEXX — deep pricing history available</div></div>
+      </div>
+      <div class="option" onclick="selectOption(this,'pms','ezyvet')">
+        <div class="option-icon">🟢</div>
+        <div class="option-body"><div class="option-label">ezyVet</div><div class="option-desc">Cloud-based — CSV export supported</div></div>
+      </div>
+      <div class="option" onclick="selectOption(this,'pms','other')">
+        <div class="option-icon">📋</div>
+        <div class="option-body"><div class="option-label">Other / Not Sure</div><div class="option-desc">We'll figure out the best approach together</div></div>
+      </div>
+    </div>
+    <div class="btn-row">
+      <div></div>
+      <button class="btn btn-primary" id="next-1" onclick="nextStep(1)" disabled>Continue →</button>
+    </div>
+  </div>
+
+  <!-- Step 2: Locations -->
+  <div class="card" id="step-2">
+    <div class="card-badge">Step 2</div>
+    <h2>How many clinic locations?</h2>
+    <p class="sub">Each location has its own pricing history — more locations means more opportunity.</p>
+    <div class="options two-col">
+      <div class="option" onclick="selectOption(this,'locations','1')">
+        <div class="option-body"><div class="option-label">1 location</div><div class="option-desc">Single clinic</div></div>
+      </div>
+      <div class="option" onclick="selectOption(this,'locations','2-3')">
+        <div class="option-body"><div class="option-label">2–3 locations</div><div class="option-desc">Small group</div></div>
+      </div>
+      <div class="option" onclick="selectOption(this,'locations','4-10')">
+        <div class="option-body"><div class="option-label">4–10 locations</div><div class="option-desc">Regional group</div></div>
+      </div>
+      <div class="option" onclick="selectOption(this,'locations','10+')">
+        <div class="option-body"><div class="option-label">10+ locations</div><div class="option-desc">Enterprise</div></div>
+      </div>
+    </div>
+    <div class="btn-row">
+      <button class="btn btn-ghost" onclick="prevStep(2)">← Back</button>
+      <button class="btn btn-primary" id="next-2" onclick="nextStep(2)" disabled>Continue →</button>
+    </div>
+  </div>
+
+  <!-- Step 3: Revenue -->
+  <div class="card" id="step-3">
+    <div class="card-badge">Step 3</div>
+    <h2>What's your approximate annual revenue?</h2>
+    <p class="sub">Used to calculate your estimated pricing recovery — we find 3–5% on average.</p>
+    <div class="slider-value" id="revenueDisplay">$1.2M <span>per year</span></div>
+    <div class="slider-wrap">
+      <input type="range" id="revenueSlider" min="0" max="12" value="4" oninput="updateRevenue(this.value)">
+      <div class="slider-labels"><span>$250K</span><span>$1M</span><span>$2M</span><span>$3M+</span></div>
+    </div>
+    <div class="btn-row">
+      <button class="btn btn-ghost" onclick="prevStep(3)">← Back</button>
+      <button class="btn btn-primary" onclick="nextStep(3)">Continue →</button>
+    </div>
+  </div>
+
+  <!-- Step 4: Last price review -->
+  <div class="card" id="step-4">
+    <div class="card-badge">Step 4</div>
+    <h2>When did you last do a full price review?</h2>
+    <p class="sub">Most clinics haven't touched prices in years. The longer it's been, the more recovery available.</p>
+    <div class="options">
+      <div class="option" onclick="selectOption(this,'lastReview','6mo')">
+        <div class="option-icon">✅</div>
+        <div class="option-body"><div class="option-label">Within the last 6 months</div><div class="option-desc">Relatively current — smaller gap to close</div></div>
+      </div>
+      <div class="option" onclick="selectOption(this,'lastReview','1-2yr')">
+        <div class="option-icon">⚠️</div>
+        <div class="option-body"><div class="option-label">1–2 years ago</div><div class="option-desc">Some drift — likely 2–3% left on the table</div></div>
+      </div>
+      <div class="option" onclick="selectOption(this,'lastReview','3yr+')">
+        <div class="option-icon">🔴</div>
+        <div class="option-body"><div class="option-label">3+ years ago</div><div class="option-desc">Significant drift — 4–6% recovery likely</div></div>
+      </div>
+      <div class="option" onclick="selectOption(this,'lastReview','never')">
+        <div class="option-icon">❓</div>
+        <div class="option-body"><div class="option-label">Never / Don't know</div><div class="option-desc">Highest potential — we'll find out together</div></div>
+      </div>
+    </div>
+    <div class="btn-row">
+      <button class="btn btn-ghost" onclick="prevStep(4)">← Back</button>
+      <button class="btn btn-primary" id="next-4" onclick="nextStep(4)" disabled>Continue →</button>
+    </div>
+  </div>
+
+  <!-- Step 5: Pain points -->
+  <div class="card" id="step-5">
+    <div class="card-badge">Step 5</div>
+    <h2>What's your biggest operational headache right now?</h2>
+    <p class="sub">Helps us focus on what matters most to you — not just what we think is important.</p>
+    <div class="options">
+      <div class="option" onclick="selectOption(this,'pain','pricing')">
+        <div class="option-icon">💰</div>
+        <div class="option-body"><div class="option-label">Pricing is out of date</div><div class="option-desc">I know we're undercharging but don't know where or by how much</div></div>
+      </div>
+      <div class="option" onclick="selectOption(this,'pain','inventory')">
+        <div class="option-icon">📦</div>
+        <div class="option-body"><div class="option-label">Inventory margin erosion</div><div class="option-desc">Supplier costs go up, but prices don't follow</div></div>
+      </div>
+      <div class="option" onclick="selectOption(this,'pain','visibility')">
+        <div class="option-icon">📊</div>
+        <div class="option-body"><div class="option-label">No visibility into revenue trends</div><div class="option-desc">Flying blind — no dashboard to see what's happening</div></div>
+      </div>
+      <div class="option" onclick="selectOption(this,'pain','time')">
+        <div class="option-icon">⏱️</div>
+        <div class="option-body"><div class="option-label">Too much time on admin</div><div class="option-desc">Reports and price changes take too long to do manually</div></div>
+      </div>
+    </div>
+    <div class="btn-row">
+      <button class="btn btn-ghost" onclick="prevStep(5)">← Back</button>
+      <button class="btn btn-primary" id="next-5" onclick="nextStep(5)" disabled>Continue →</button>
+    </div>
+  </div>
+
+  <!-- Step 6: Contact -->
+  <div class="card" id="step-6">
+    <div class="card-badge">Step 6</div>
+    <h2>Where should we send your results?</h2>
+    <p class="sub">We'll calculate your estimated recovery and recommend the right plan — takes about 2 minutes to put together.</p>
+    <div class="text-row">
+      <div class="field"><label>First Name</label><input type="text" id="firstName" placeholder="Jane" oninput="checkContact()"></div>
+      <div class="field"><label>Last Name</label><input type="text" id="lastName" placeholder="Smith" oninput="checkContact()"></div>
+      <div class="field full"><label>Work Email</label><input type="email" id="email" placeholder="jane@hillsidevet.com" oninput="checkContact()"></div>
+      <div class="field full"><label>Clinic Name</label><input type="text" id="clinicName" placeholder="Hillside Veterinary Clinic" oninput="checkContact()"></div>
+    </div>
+    <div class="btn-row">
+      <button class="btn btn-ghost" onclick="prevStep(6)">← Back</button>
+      <button class="btn btn-primary btn-lg" id="submit-btn" onclick="submitSurvey()" disabled>Show My Results →</button>
+    </div>
+  </div>
+
+  <!-- Results -->
+  <div class="card" id="step-results">
+    <div class="card-badge">Your Results</div>
+    <div class="result-hero">
+      <div class="result-label">Estimated annual revenue recovery</div>
+      <div class="result-amount" id="recoveryAmount">$0</div>
+      <div class="result-note" id="recoveryNote"></div>
+    </div>
+
+    <div class="breakdown" id="breakdownSection">
+      <div class="breakdown-title">Recovery breakdown</div>
+      <div class="breakdown-row">
+        <span class="breakdown-label">Stale pricing (inflation gap)</span>
+        <span class="breakdown-value green" id="b1">—</span>
+      </div>
+      <div class="breakdown-row">
+        <span class="breakdown-label">.99 rounding recovery</span>
+        <span class="breakdown-value green" id="b2">—</span>
+      </div>
+      <div class="breakdown-row">
+        <span class="breakdown-label">Inventory margin leakage</span>
+        <span class="breakdown-value green" id="b3">—</span>
+      </div>
+      <div class="breakdown-row total">
+        <span class="breakdown-label">Total addressable recovery</span>
+        <span class="breakdown-value green" id="bTotal">—</span>
+      </div>
+    </div>
+
+    <div class="plan-cards" id="planCards"></div>
+
+    <div class="cta-section">
+      <p>Your results have been sent to <strong id="resultEmail"></strong>. A member of the Vet INC team will follow up within 24 hours.</p>
+      <a href="https://calendly.com/wildejack1010" target="_blank">
+        <button class="btn btn-primary btn-lg">Book a 20-Min Intro Call →</button>
+      </a>
+    </div>
+  </div>
+</div>
+
+<script>
+const state = {
+  pms: null,
+  locations: null,
+  revenue: 1200000,
+  lastReview: null,
+  pain: null,
+  contact: {}
+};
+
+const revenueValues = [250000,350000,500000,650000,800000,1000000,1200000,1500000,1800000,2200000,2600000,3000000,3500000];
+
+function fmt(n){
+  if(n>=1000000) return '$'+(n/1000000).toFixed(1).replace(/\.0$/,'')+'M';
+  return '$'+(n/1000).toFixed(0)+'K';
+}
+function fmtFull(n){
+  return '$'+Math.round(n).toLocaleString();
+}
+
+function updateRevenue(v){
+  state.revenue = revenueValues[v];
+  document.getElementById('revenueDisplay').innerHTML = fmt(state.revenue)+' <span>per year</span>';
+}
+
+function selectOption(el, key, val){
+  const parent = el.closest('.options');
+  parent.querySelectorAll('.option').forEach(o=>o.classList.remove('selected'));
+  el.classList.add('selected');
+  state[key] = val;
+  const step = el.closest('.card').id.replace('step-','');
+  const btn = document.getElementById('next-'+step);
+  if(btn) btn.disabled = false;
+}
+
+function checkContact(){
+  const fn = document.getElementById('firstName').value.trim();
+  const em = document.getElementById('email').value.trim();
+  const cn = document.getElementById('clinicName').value.trim();
+  const valid = fn && em && em.includes('@') && cn;
+  document.getElementById('submit-btn').disabled = !valid;
+}
+
+const stepMeta = [
+  {label:'Clinic Profile', stepOf:'1 of 6', pct:16},
+  {label:'Locations', stepOf:'2 of 6', pct:33},
+  {label:'Revenue', stepOf:'3 of 6', pct:50},
+  {label:'Pricing History', stepOf:'4 of 6', pct:66},
+  {label:'Pain Points', stepOf:'5 of 6', pct:83},
+  {label:'Contact Info', stepOf:'6 of 6', pct:100},
+];
+
+function showStep(n){
+  document.querySelectorAll('.card').forEach(c=>c.classList.remove('active'));
+  document.getElementById('step-'+n).classList.add('active');
+  const meta = stepMeta[n-1];
+  if(meta){
+    document.getElementById('stepLabel').textContent = meta.label;
+    document.getElementById('stepCount').textContent = meta.stepOf;
+    document.getElementById('progressFill').style.width = meta.pct+'%';
+  }
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+function nextStep(current){
+  showStep(current+1);
+}
+function prevStep(current){
+  showStep(current-1);
+}
+
+function calcResults(){
+  const rev = state.revenue;
+  const reviewMult = {
+    '6mo': 0.015,
+    '1-2yr': 0.028,
+    '3yr+': 0.050,
+    'never': 0.055
+  }[state.lastReview] || 0.03;
+
+  const b1 = Math.round(rev * reviewMult * 0.5);
+  const b2 = Math.round(rev * 0.008);
+  const b3 = Math.round(rev * 0.006);
+  const total = b1 + b2 + b3;
+
+  return {b1, b2, b3, total};
+}
+
+function recommendPlan(total, locations){
+  const locCount = {'1':1,'2-3':2.5,'4-10':7,'10+':15}[locations] || 1;
+  if(locCount >= 4) return 'C-pro';
+  if(total > 60000 || locCount > 1) return 'C-growth';
+  return total > 25000 ? 'B' : 'A';
+}
+
+const plans = {
+  A: {
+    name: 'Starter Plan',
+    price: '$299/mo',
+    priceNote: '+ $1,500 setup',
+    features: ['Full pricing audit & dashboard','Inflation price recovery campaign','.99 pricing optimization','Monthly revenue reports','Email support'],
+  },
+  B: {
+    name: 'Recovery Share',
+    price: '$299/mo + 3–5%',
+    priceNote: 'of recovered revenue',
+    features: ['Everything in Starter','Shared upside model — we win when you win','No large setup fee','Quarterly strategy review','Priority support'],
+  },
+  'C-growth': {
+    name: 'Growth Plan',
+    price: '$599/mo',
+    priceNote: 'per location',
+    features: ['Multi-location dashboard','All three pricing campaigns active','Inventory margin tracking','Bi-weekly review calls','Dedicated account manager'],
+  },
+  'C-pro': {
+    name: 'Pro Plan',
+    price: '$999/mo',
+    priceNote: 'per location',
+    features: ['Everything in Growth','Write-back automation (push prices to PIMS)','Custom campaign builds','Weekly strategy calls','SLA support'],
+  },
+};
+
+const planOrder = {
+  A: ['A','B','C-growth'],
+  B: ['B','A','C-growth'],
+  'C-growth': ['C-growth','B','C-pro'],
+  'C-pro': ['C-pro','C-growth','B'],
+};
+
+function submitSurvey(){
+  state.contact = {
+    firstName: document.getElementById('firstName').value.trim(),
+    lastName: document.getElementById('lastName').value.trim(),
+    email: document.getElementById('email').value.trim(),
+    clinic: document.getElementById('clinicName').value.trim(),
+  };
+
+  const {b1,b2,b3,total} = calcResults();
+  const rec = recommendPlan(total, state.locations);
+
+  document.getElementById('recoveryAmount').textContent = fmtFull(total);
+  document.getElementById('recoveryNote').textContent =
+    'Based on your '+fmt(state.revenue)+' revenue and pricing history — conservative estimate.';
+  document.getElementById('b1').textContent = fmtFull(b1);
+  document.getElementById('b2').textContent = fmtFull(b2);
+  document.getElementById('b3').textContent = fmtFull(b3);
+  document.getElementById('bTotal').textContent = fmtFull(total);
+  document.getElementById('resultEmail').textContent = state.contact.email;
+
+  const order = planOrder[rec];
+  const container = document.getElementById('planCards');
+  container.innerHTML = '';
+  order.forEach((pk, i) => {
+    const p = plans[pk];
+    const isRec = i === 0;
+    container.innerHTML += `
+      <div class="plan-card ${isRec?'recommended':''}">
+        ${isRec?'<div class="rec-badge">Recommended for you</div>':''}
+        <div class="plan-name">${p.name}</div>
+        <div class="plan-price">${p.price} <small>${p.priceNote}</small></div>
+        <ul class="plan-features">
+          ${p.features.map(f=>`<li>${f}</li>`).join('')}
+        </ul>
+      </div>`;
+  });
+
+  document.querySelectorAll('.card').forEach(c=>c.classList.remove('active'));
+  document.getElementById('step-results').classList.add('active');
+  document.getElementById('progressFill').style.width = '100%';
+  document.getElementById('stepLabel').textContent = 'Your Results';
+  document.getElementById('stepCount').textContent = 'Complete';
+  window.scrollTo({top:0,behavior:'smooth'});
+
+  // Log to console for now (wire to Supabase/n8n later)
+  console.log('Survey submission:', {
+    ...state,
+    recovery: {b1,b2,b3,total},
+    recommendedPlan: rec,
+  });
+}
+
+// Init revenue slider
+updateRevenue(4);
+</script>
+</body>
+</html>
