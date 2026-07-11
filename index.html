@@ -138,6 +138,37 @@ footer{border-top:1px solid var(--line);padding:24px}
 .r{opacity:0;transform:translateY(10px);transition:.4s ease}
 .r.on{opacity:1;transform:none}
 @media(max-width:600px){.hero{padding:140px 20px 32px}.section{padding:64px 20px}}
+
+/* ═══ HOW IT WORKS ═══ */
+.how-section{border-top:1px solid var(--line);border-bottom:1px solid var(--line);position:relative;overflow:hidden;background:var(--bg)}
+.how-section::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 80% 55% at 50% -5%,rgba(37,99,235,.05) 0%,transparent 100%);pointer-events:none}
+.how-header{max-width:560px;position:relative}
+.how-steps{display:flex;align-items:stretch;gap:0;margin-top:52px;position:relative}
+.how-step-card{flex:1;min-width:0;background:#fff;border:1px solid var(--line);border-radius:16px;padding:28px 22px 26px;box-shadow:0 1px 2px rgba(0,0,0,.04),0 4px 18px rgba(0,0,0,.06);display:flex;flex-direction:column;position:relative;transition:box-shadow .22s,transform .18s}
+.how-step-card:hover{box-shadow:0 2px 8px rgba(0,0,0,.07),0 14px 36px rgba(0,0,0,.1);transform:translateY(-3px)}
+.how-step-card--featured{border-color:var(--blue);border-width:1.5px;background:linear-gradient(155deg,#ffffff 40%,#eff6ff 100%);box-shadow:0 2px 8px rgba(37,99,235,.1),0 8px 28px rgba(37,99,235,.11)}
+.how-step-card--featured:hover{box-shadow:0 4px 16px rgba(37,99,235,.2),0 18px 44px rgba(37,99,235,.15);transform:translateY(-3px)}
+.how-step-num{font-size:.58rem;font-weight:800;letter-spacing:.16em;text-transform:uppercase;color:var(--dimmer);position:absolute;top:17px;right:18px}
+.how-icon-wrap{width:46px;height:46px;border-radius:12px;background:var(--blue-bg);border:1px solid #dbeafe;display:flex;align-items:center;justify-content:center;margin-bottom:18px;color:var(--blue);flex-shrink:0}
+.how-step-card--featured .how-icon-wrap{background:var(--blue);border-color:var(--blue);color:#fff;box-shadow:0 4px 14px rgba(37,99,235,.36)}
+.how-card-title{font-size:.9rem;font-weight:700;color:var(--ink);margin-bottom:8px;line-height:1.3;padding-right:28px}
+.how-card-desc{font-size:.8rem;color:var(--dim);line-height:1.65;flex:1}
+.how-pms-pills{display:flex;gap:5px;flex-wrap:wrap;margin-top:14px}
+.how-pms-pill{font-size:.63rem;font-weight:600;color:var(--ink2);background:var(--bg3);border:1px solid var(--line);padding:3px 8px;border-radius:20px}
+.how-monitor-bar{display:flex;flex-direction:column;gap:7px;margin-top:14px;padding:10px 12px;background:rgba(22,163,74,.05);border:1px solid rgba(22,163,74,.14);border-radius:9px}
+.how-monitor-row{display:flex;align-items:center;gap:8px;font-size:.7rem;font-weight:500;color:var(--ink2)}
+.how-monitor-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0;animation:how-pulse 2.2s ease-in-out infinite}
+.how-monitor-dot--green{background:var(--green)}
+.how-monitor-dot--blue{background:var(--blue);animation-delay:.9s}
+@keyframes how-pulse{0%,100%{opacity:1}50%{opacity:.35}}
+.how-diff-badge{display:inline-flex;align-items:center;gap:6px;font-size:.68rem;font-weight:700;color:var(--blue);background:var(--blue-bg);padding:5px 11px;border-radius:20px;border:1px solid #dbeafe;margin-top:12px;width:fit-content;line-height:1}
+.how-connector{flex-shrink:0;width:32px;display:flex;align-items:center;justify-content:center;color:var(--line2)}
+@media(max-width:860px){
+  .how-steps{flex-direction:column;gap:10px}
+  .how-connector{width:auto;height:24px;align-self:center}
+  .how-connector svg{transform:rotate(90deg)}
+  .how-step-card{padding:24px 20px}
+}
 </style>
 </head>
 <body>
@@ -195,16 +226,81 @@ footer{border-top:1px solid var(--line);padding:24px}
 </div>
 
 <!-- HOW IT WORKS -->
-<div class="section r" id="how">
+<div class="section how-section r" id="how">
   <div class="section-inner">
-    <span class="sec-label">How it works</span>
-    <h2 class="sec-h">We connect. We recommend. <span>We update.</span></h2>
-    <p class="sec-p">No spreadsheets. No uploading. No guesswork. Vet INC connects directly to your PMS, pulls your data, recommends the right changes, and makes them — so you never have to.</p>
-    <div class="flow">
-      <div class="flow-step"><div class="flow-n">1</div><div><div class="flow-title">We connect to your PMS</div><p class="flow-desc">Vet INC integrates directly with AVImark, Cornerstone, and other major practice management systems. No exports, no uploads — we pull your data automatically.</p></div></div>
-      <div class="flow-step"><div class="flow-n">2</div><div><div class="flow-title">We recommend the right changes</div><p class="flow-desc">On your schedule — quarterly, monthly, whatever works. We flag codes that have drifted, show you the recommended price, and explain the reasoning.</p></div></div>
-      <div class="flow-step"><div class="flow-n">3</div><div><div class="flow-title">You approve with one click</div><p class="flow-desc">Review the recommendations in your dashboard. Approve what looks right, reject what doesn't. The whole review takes minutes.</p></div></div>
-      <div class="flow-step"><div class="flow-n">4</div><div><div class="flow-title">We push the changes to your PMS</div><p class="flow-desc">Approved changes go straight back into your practice management system — no manual entry. Then we monitor revenue and visit volume to make sure everything landed right.</p></div></div>
+    <div class="how-header">
+      <span class="sec-label">How it works</span>
+      <h2 class="sec-h">Four steps. <span>Zero spreadsheets.</span></h2>
+      <p class="sec-p">We connect to your PMS, model what inflation has done to your pricing, push the approved changes back — then monitor to make sure it worked.</p>
+    </div>
+
+    <div class="how-steps">
+
+      <div class="how-step-card">
+        <span class="how-step-num">01</span>
+        <div class="how-icon-wrap">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
+        </div>
+        <div class="how-card-title">Connect to your PMS</div>
+        <p class="how-card-desc">We integrate directly with your practice management system. No exports, no uploads, no manual work — your full fee schedule syncs automatically.</p>
+        <div class="how-pms-pills">
+          <span class="how-pms-pill">AVImark</span>
+          <span class="how-pms-pill">Cornerstone</span>
+          <span class="how-pms-pill">+ more</span>
+        </div>
+      </div>
+
+      <div class="how-connector" aria-hidden="true">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="M14 7l5 5-5 5"/></svg>
+      </div>
+
+      <div class="how-step-card">
+        <span class="how-step-num">02</span>
+        <div class="how-icon-wrap">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="22 7 13.5 15.5 8.5 10.5 2 17"/><polyline points="16 7 22 7 22 13"/></svg>
+        </div>
+        <div class="how-card-title">Inflation-aware recommendations, quarterly</div>
+        <p class="how-card-desc">We model what inflation has done to your cost basis and surface codes that have drifted — with gradual quarterly steps, not one-time spikes that scare clients away.</p>
+        <div class="how-pms-pills">
+          <span class="how-pms-pill">CPI-indexed</span>
+          <span class="how-pms-pill">Gradual steps</span>
+        </div>
+      </div>
+
+      <div class="how-connector" aria-hidden="true">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="M14 7l5 5-5 5"/></svg>
+      </div>
+
+      <div class="how-step-card">
+        <span class="how-step-num">03</span>
+        <div class="how-icon-wrap">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
+        </div>
+        <div class="how-card-title">You approve with one click</div>
+        <p class="how-card-desc">Review every recommendation in your dashboard — see the current price, the proposed change, and the reasoning. Approve or skip in minutes.</p>
+      </div>
+
+      <div class="how-connector" aria-hidden="true">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="M14 7l5 5-5 5"/></svg>
+      </div>
+
+      <div class="how-step-card how-step-card--featured">
+        <span class="how-step-num">04</span>
+        <div class="how-icon-wrap">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg>
+        </div>
+        <div class="how-card-title">We push changes and monitor volume</div>
+        <p class="how-card-desc">Approved changes go straight into your PMS — no manual entry. Then we track whether visit volume drops, so you know every change landed safely.</p>
+        <div class="how-monitor-bar">
+          <div class="how-monitor-row"><span class="how-monitor-dot how-monitor-dot--green"></span>Revenue trending up</div>
+          <div class="how-monitor-row"><span class="how-monitor-dot how-monitor-dot--blue"></span>Visit volume stable</div>
+        </div>
+        <div class="how-diff-badge">
+          <svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+          Our differentiator
+        </div>
+      </div>
+
     </div>
   </div>
 </div>
