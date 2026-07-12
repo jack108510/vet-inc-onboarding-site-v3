@@ -33,7 +33,18 @@ nav{max-width:1040px;margin:0 auto;height:100px;padding:0 24px;display:flex;alig
 .nav-r a:hover{color:var(--ink);background:var(--bg3)}
 .nav-cta{background:var(--ink)!important;color:#fff!important;font-weight:600!important;padding:8px 16px!important;border-radius:7px!important}
 .nav-cta:hover{background:var(--blue)!important}
-@media(max-width:700px){.nav-r a:not(.nav-cta){display:none}}
+@media(max-width:700px){.nav-r a:not(.nav-cta):not(.nav-call){display:none}}
+
+/* Phone / Call buttons */
+.btn-call{background:var(--green);color:#fff}
+.btn-call:hover{background:#15803d;transform:translateY(-1px)}
+.nav-call{background:var(--green)!important;color:#fff!important;font-weight:600!important;padding:8px 14px!important;border-radius:7px!important;display:inline-flex!important;align-items:center!important;gap:6px!important;font-size:.85rem!important}
+.nav-call:hover{background:#15803d!important}
+
+/* Floating mobile call button */
+.float-call{display:none;position:fixed;bottom:24px;right:24px;z-index:200;width:56px;height:56px;border-radius:50%;background:var(--green);color:#fff;align-items:center;justify-content:center;box-shadow:0 4px 20px rgba(22,163,74,.45);text-decoration:none;animation:float-call-pulse 2s ease-in-out infinite}
+@media(max-width:700px){.float-call{display:flex}}
+@keyframes float-call-pulse{0%,100%{box-shadow:0 4px 20px rgba(22,163,74,.45),0 0 0 0 rgba(22,163,74,.35)}60%{box-shadow:0 4px 20px rgba(22,163,74,.45),0 0 0 12px rgba(22,163,74,0)}}
 
 /* HERO */
 .hero-shell{position:relative;overflow:hidden}
@@ -244,6 +255,7 @@ footer{border-top:1px solid var(--line);padding:24px}
     <a href="#how">How it works</a>
     <a href="#pricing">Pricing</a>
     <a href="mailto:jack@vetinc.ca?subject=Free%20fee%20schedule%20analysis" class="btn btn-s">Book free analysis</a>
+    <a href="tel:+15873168477" class="nav-call" aria-label="Call Vet INC"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/></svg>Call</a>
   </div>
 </nav>
 </div>
@@ -257,6 +269,7 @@ footer{border-top:1px solid var(--line);padding:24px}
       <p class="hero-p">Vet INC connects directly to your PMS, pulls your fee schedule data, and recommends what to change. You approve with a click — and we push the updates back in for you.</p>
       <div class="hero-btns">
         <a href="schedule.html" class="btn btn-p">Book a free analysis</a>
+        <a href="tel:+15873168477" class="btn btn-call"><svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" style="flex-shrink:0"><path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/></svg>Call us</a>
         <a href="#how" class="btn btn-s">See how it works</a>
       </div>
       <div class="hero-fine">
@@ -569,7 +582,10 @@ footer{border-top:1px solid var(--line);padding:24px}
   <div class="cta-inner">
     <h2 class="cta-h">Pricing changes <span>in minutes.</span></h2>
     <p class="cta-p">We'll show you what we'd change on your fee schedule — before you pay anything.</p>
-    <a href="schedule.html" class="btn btn-p">Book a free analysis</a>
+    <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap">
+      <a href="schedule.html" class="btn btn-p">Book a free analysis</a>
+      <a href="tel:+15873168477" class="btn btn-call"><svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" style="flex-shrink:0"><path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/></svg>Call us</a>
+    </div>
     <p class="cta-fine">jack@vetinc.ca &nbsp;·&nbsp; AVImark &amp; Cornerstone</p>
   </div>
 </div>
@@ -579,9 +595,14 @@ footer{border-top:1px solid var(--line);padding:24px}
 <footer>
   <div class="footer-inner">
     <div class="f-left"><div class="f-logo"><img src="logo.png" alt="Vet INC"/></div><span class="f-copy">© 2026 Vet INC</span></div>
-    <div class="f-links"><a href="mailto:jack@vetinc.ca">Contact</a></div>
+    <div class="f-links"><a href="mailto:jack@vetinc.ca">Contact</a><a href="tel:+15873168477">+1 (587) 316-8477</a></div>
   </div>
 </footer>
+
+<!-- Floating mobile call button -->
+<a href="tel:+15873168477" class="float-call" aria-label="Call Vet INC at +1 587 316 8477">
+  <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/></svg>
+</a>
 
 <script>
 const io=new IntersectionObserver(e=>e.forEach(x=>{if(x.isIntersecting){x.target.classList.add('on');io.unobserve(x.target)}}),{threshold:.07});
